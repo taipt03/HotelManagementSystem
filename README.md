@@ -9,11 +9,11 @@ How to run the Hotel Booking Management System Project
 
 4.Open PHPMyAdmin (http://localhost/phpmyadmin)
 
-5.Create a database with name hbmsdb
+5.Create a database with name 
 
 6.Import hbmsdb.sql file(given inside the zip package in SQL file folder)
 
-7.Run the script http://localhost/hbms
+7.Run the script http://localhost/HBMS/src.
 
 Admin Credential
 Username: admin

@@ -3,10 +3,10 @@
     define('DB_HOST','localhost');
     define('DB_USER','root');
     define('DB_PASS','');
-    define('DB_NAME','hotel_booking');
+    define('DB_NAME','hbmsdb');
     // Establish database connection.
     try {
-        $dbh = new PDO("mysql:host=localhost; port=4307; dbname=hotel_booking", "root", ""); // array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
+        $dbh = new PDO("mysql:host=localhost; port=4307; dbname=hbmsdb", "root", ""); // array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
     } catch (PDOException $e) {
         exit("Error: " . $e->getMessage());
     }
