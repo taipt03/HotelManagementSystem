@@ -55,7 +55,7 @@ CREATE TABLE `tblbooking` (
   `RoomId` int(5) DEFAULT NULL,
   `BookingNumber` varchar(120) DEFAULT NULL,
   `UserID` int(5) NOT NULL,
-  `IDType` varchar(120) DEFAULT NULL,
+  `PaymentMethod` varchar(120) DEFAULT NULL,
   `Gender` varchar(50) DEFAULT NULL,
   `Address` mediumtext DEFAULT NULL,
   `CheckinDate` varchar(200) DEFAULT NULL,
@@ -70,9 +70,8 @@ CREATE TABLE `tblbooking` (
 -- Dumping data for table `tblbooking`
 --
 
-INSERT INTO `tblbooking` (`ID`, `RoomId`, `BookingNumber`, `UserID`, `IDType`, `Gender`, `Address`, `CheckinDate`, `CheckoutDate`, `BookingDate`, `Remark`, `Status`, `UpdationDate`) VALUES
-(1, 1, '390343987', 3, 'Identification Card', 'Female', 'A 123 Gaur Apartment', '2023-05-10', '2023-05-15', '2023-05-02 07:12:29', 'Booking accepted', 'Approved', '2023-05-02 07:15:51'),
-(2, 2, '545403040', 4, 'Visa Card', 'Male', 'A 12232 ABC Apartment Mayur Vihar New Delhi', '2023-05-20', '2023-05-25', '2023-05-05 02:50:41', 'Booking Accepted', 'Approved', '2023-05-05 02:51:35');
+INSERT INTO `tblbooking` (`ID`, `RoomId`, `BookingNumber`, `UserID`, `PaymentMethod`, `CheckinDate`, `CheckoutDate`, `BookingDate`, `Remark`, `Status`, `UpdationDate`) VALUES
+(2, 2, '545403040', 4, 'Visa Card', '2023-05-20', '2023-05-25', '2023-05-05 02:50:41', 'Booking Accepted', 'Approved', '2023-05-05 02:51:35');
 
 -- --------------------------------------------------------
 
@@ -84,7 +83,6 @@ CREATE TABLE `tblcategory` (
   `ID` int(10) NOT NULL,
   `CategoryName` varchar(120) DEFAULT NULL,
   `Description` mediumtext DEFAULT NULL,
-  `Price` int(5) NOT NULL,
   `Date` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -93,11 +91,11 @@ CREATE TABLE `tblcategory` (
 --
 
 INSERT INTO `tblcategory` (`ID`, `CategoryName`, `Description`, `Price`, `Date`) VALUES
-(1, 'Single Room', 'Only for one person', 800, '2023-02-23 06:43:55'),
-(2, 'Double Room', 'For Two Person', 1100, '2023-03-23 06:44:55'),
-(3, 'Triple Room', 'A room assigned to three people. May have two or more beds.', 1200, '2023-04-01 06:45:27'),
-(4, 'Quad Room', 'A room assigned to four people. May have two or more beds.', 1800, '2020-02-28 06:45:56'),
-(5, 'Queen Room', 'A room with a queen-sized bed. May be occupied by one or more people', 2000, '2023-05-01 06:46:30');
+(1, 'Single Room', 'Only for one person', '2023-02-23 06:43:55'),
+(2, 'Double Room', 'For Two Person', '2023-03-23 06:44:55'),
+(3, 'Triple Room', 'A room assigned to three people. May have two or more beds.', '2023-04-01 06:45:27'),
+(4, 'Quad Room', 'A room assigned to four people. May have two or more beds.', '2020-02-28 06:45:56'),
+(5, 'Queen Room', 'A room with a queen-sized bed. May be occupied by one or more people', '2023-05-01 06:46:30');
 
 -- --------------------------------------------------------
 
@@ -107,11 +105,9 @@ INSERT INTO `tblcategory` (`ID`, `CategoryName`, `Description`, `Price`, `Date`)
 
 CREATE TABLE `tblcontact` (
   `ID` int(10) NOT NULL,
-  `Name` varchar(200) DEFAULT NULL,
-  `MobileNumber` bigint(10) DEFAULT NULL,
-  `Email` varchar(200) DEFAULT NULL,
+  'UserID' int(10),
   `Message` mediumtext DEFAULT NULL,
-  `EnquiryDate` timestamp NULL DEFAULT current_timestamp(),
+  `EnquiryTime` timestamp NULL DEFAULT current_timestamp(),
   `IsRead` int(5) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -120,7 +116,7 @@ CREATE TABLE `tblcontact` (
 --
 
 INSERT INTO `tblcontact` (`ID`, `Name`, `MobileNumber`, `Email`, `Message`, `EnquiryDate`, `IsRead`) VALUES
-(1, 'Joh Doe', 1425365412, 'johnd@gmail.com', 'I want o stay in hotel', '2023-08-05 02:53:52', 1);
+(1, 1, 'I want o stay in hotel', '2023-08-05 02:53:52', 1);
 
 -- --------------------------------------------------------
 
@@ -190,20 +186,20 @@ CREATE TABLE `tblroom` (
   `NoofBed` int(5) DEFAULT NULL,
   `Image` varchar(200) DEFAULT NULL,
   `RoomFacility` varchar(200) DEFAULT NULL,
-  `CreationDate` timestamp NULL DEFAULT current_timestamp()
+  `CreationDate` timestamp NULL DEFAULT current_timestamp(),
+  'Price' int DEFAULT NULL,
+  'Quantity' int DEFAULT NULL,
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tblroom`
 --
 
-INSERT INTO `tblroom` (`ID`, `RoomType`, `RoomName`, `MaxAdult`, `MaxChild`, `RoomDesc`, `NoofBed`, `Image`, `RoomFacility`, `CreationDate`) VALUES
-(1, 1, 'Single Room for one person', 1, 2, 'A single room is for one person and contains a single bed, and will usually be quite small', 1, '2870b3543f2550c16a4551f03a0b84ac1582975994.jpg', '24-Hour room service,Free wireless internet acces', '2023-04-29 11:33:14'),
-(2, 2, 'Double Room', 2, 2, 'A double room is a room intended for two people, usually a couple, to stay in. One person occupying a double room has to pay a supplement.', 2, '74375080377499ab76dad37484ee7f151582982180.jpg', '24-Hour room service,Free wireless internet acces', '2023-04-29 11:33:14'),
-(3, 3, 'triple room', 4, 2, 'A triple room is a hotel room that is made to comfortably accommodate three people. The triple room , simply called a triple, at times, may be configured with different bed sizes to ensure three hotel guests can be accommodated comfortably.', 3, '5ebc75f329d3b6f84d44c2c2e9764d4f1582976638.jpg', '24-Hour room service,Free wireless internet access,Laundry service,Babysitting on request,24-Hour doctor on call,Meeting facilities', '2023-04-29 11:33:14'),
-(4, 4, 'Quad Room', 6, 3, 'A quad, when referring to hotel rooms, is a room that can accommodate four people. The quad room may be configured with different bed sizes to ensure four hotel guests can be accommodated comfortably:', 4, '0cdcf50ea65522a6e15d4e0ac383a30e1582976749.jpg', '24-Hour room service,Free wireless internet access,Laundry service,Tour & excursions,Airport transfers,Babysitting on request,24-Hour doctor on call,Meeting facilities', '2023-04-29 11:33:14'),
-(5, 5, 'Queen Room', 2, 1, 'A room with a queen-size bed. It may be occupied by one or more people (Size: 153 x 203 cm). King:', 1, '7edd3d2f392c4a07d107f07cbe764fa51582977081.jpg', '24-Hour room service,Free wireless internet access,Laundry service,Tour & excursions,Airport transfers,Babysitting on request,24-Hour doctor on call,Meeting facilities', '2023-04-29 11:33:14'),
-(6, 1, 'Single Room with Balcony', 1, 2, 'Each room is equipped with satellite TV, minibar and a tea/coffee maker. Ironing facilities are provided in all rooms.\r\n\r\nTreebo Select Royal Garden offers a well-equipped business centre. Guests can make travel arrangements at the tour desk.\r\n\r\nCheckers Restaurant serves a variety of Indian, Chinese and Continental dishes.', 1, 'ca3de1cf40a0af9351083d4b0e95736c1583047692.jpg', '24-Hour doctor on call', '2023-04-29 11:33:14');
+INSERT INTO `tblroom` (`ID`, `RoomType`, `RoomName`, `MaxAdult`, `MaxChild`, `RoomDesc`, `NoofBed`, `Image`, `RoomFacility`, `CreationDate`, 'Price', "Quantity") VALUES
+(1, 1, 'Single Room for one person', 1, 2, 'A single room is for one person and contains a single bed, and will usually be quite small', 1, '2870b3543f2550c16a4551f03a0b84ac1582975994.jpg', '24-Hour room service,Free wireless internet acces', '2023-04-29 11:33:14', 800, 4),
+
+
 
 -- --------------------------------------------------------
 
@@ -217,7 +213,10 @@ CREATE TABLE `tbluser` (
   `MobileNumber` bigint(10) DEFAULT NULL,
   `Email` varchar(120) DEFAULT NULL,
   `Password` varchar(120) DEFAULT NULL,
-  `RegDate` timestamp NULL DEFAULT current_timestamp()
+  `RegDate` timestamp NULL DEFAULT current_timestamp(),
+  'IDType' varchar(50),
+  'Gender' varchar(1),
+  'Address' varchar(100)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -225,10 +224,8 @@ CREATE TABLE `tbluser` (
 --
 
 INSERT INTO `tbluser` (`ID`, `FullName`, `MobileNumber`, `Email`, `Password`, `RegDate`) VALUES
-(1, 'Test', 7897897899, 'test@gmail.com', '202cb962ac59075b964b07152d234b70', '2023-07-24 17:07:28'),
-(2, 'Sample', 4644654646, 'sample@gmail.com', '202cb962ac59075b964b07152d234b70', '2023-07-30 12:51:42'),
-(3, 'Anu', 1234569871, 'Test@test.com', 'f925916e2754e5e03f75dd58a5733251', '2023-07-15 14:53:36'),
-(4, 'John Doe', 4125365412, 'johndeo@test.com', 'f925916e2754e5e03f75dd58a5733251', '2023-07-18 02:49:44');
+(1, 'Test', 7897897899, 'test@gmail.com', '202cb962ac59075b964b07152d234b70', '2023-07-24 17:07:28','389216598638JK', M, '1 Dai Co Viet'),
+
 
 
 --
@@ -252,7 +249,6 @@ ALTER TABLE `tblbooking`
 --
 ALTER TABLE `tblcategory`
   ADD PRIMARY KEY (`ID`),
-  ADD KEY `ID` (`ID`);
 
 --
 -- Indexes for table `tblcontact`
@@ -277,14 +273,12 @@ ALTER TABLE `tblpage`
 --
 ALTER TABLE `tblroom`
   ADD PRIMARY KEY (`ID`),
-  ADD KEY `RoomType` (`RoomType`);
 
 --
 -- Indexes for table `tbluser`
 --
 ALTER TABLE `tbluser`
   ADD PRIMARY KEY (`ID`),
-  ADD KEY `ID` (`ID`);
 
 --
 -- AUTO_INCREMENT for dumped tables
