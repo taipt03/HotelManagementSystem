@@ -15,8 +15,8 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 		$roomfac = implode(',', $_POST['roomfac']);
 		$roomdes = $_POST['roomdes'];
 		$nobed = $_POST['nobed'];
-
-
+		$price = $_POST['price'];
+		$quantity = $_POST['$quantity'];
 		$img = $_FILES["image"]["name"];
 		$extension = substr($img, strlen($img) - 4, strlen($img));
 		$allowed_extensions = array(".jpg", "jpeg", ".png", ".gif");
@@ -26,7 +26,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 
 			$img = md5($img) . time() . $extension;
 			move_uploaded_file($_FILES["image"]["tmp_name"], "images/" . $img);
-			$sql = "insert into tblroom(RoomType,RoomName,MaxAdult,MaxChild,RoomDesc,NoofBed,Image,RoomFacility)values(:roomtype,:roomname,:maxadult,:maxchild,:roomdes,:nobed,:img,:roomfac)";
+			$sql = "INSERT INTO tblroom(RoomType,RoomName,MaxAdult,MaxChild,RoomDesc,NoofBed,Image,RoomFacility, Price, Quantity)VALUES(:roomtype,:roomname,:maxadult,:maxchild,:roomdes,:nobed,:img,:roomfac, :price, :quantity)";
 			$query = $dbh->prepare($sql);
 			$query->bindParam(':roomtype', $roomtype, PDO::PARAM_STR);
 			$query->bindParam(':roomname', $roomname, PDO::PARAM_STR);
@@ -36,6 +36,9 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 			$query->bindParam(':nobed', $nobed, PDO::PARAM_STR);
 			$query->bindParam(':roomfac', $roomfac, PDO::PARAM_STR);
 			$query->bindParam(':img', $img, PDO::PARAM_STR);
+			$query->bindParam(':price', $price, PDO::PARAM_STR);
+			$query->bindParam('quantity', $quantity, PDO::PARAM_INT);
+
 			$query->execute();
 
 			$LastInsertId = $dbh->lastInsertId();
@@ -157,7 +160,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 
 															foreach ($result2 as $row) {
 															?>
-																<option value="<?php echo htmlentities($row->ID); ?>"><?php echo htmlentities($row->CategoryName); ?></option>
+																<option value="<?php echo htmlentities($row->ID); ?>"><?php echo htmlentities($row->categoryname); ?></option>
 															<?php } ?>
 
 
@@ -167,9 +170,11 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 													<div class="form-group"> <label for="exampleInputEmail1">Max Child</label> <input type="text" class="form-control" name="maxchild" pattern="[0-9]+" required> </div>
 													<div class="form-group"> <label for="exampleInputEmail1">Room Description</label> <textarea type="text" class="form-control" name="roomdes" value=""></textarea> </div>
 													<div class="form-group"> <label for="exampleInputEmail1">No. of Bed</label> <input type="text" class="form-control" name="nobed" pattern="[0-9]+" required> </div>
+													<div class="form-group"> <label for="exampleInputEmail1">Price</label> <input type="text" class="form-control" name="nobed" pattern="[0-9]+" required> </div>
+													<div class="form-group"> <label for="exampleInputEmail1">Quantity</label> <input type="text" class="form-control" name="nobed" pattern="[0-9]+" required> </div>
 													<div class="form-group"> <label for="exampleInputEmail1">Room Image</label> <input type="file" class="form-control" name="image" value="" required='true'> </div>
 													<div class="form-group"> <label for="exampleInputEmail1">Room Facility</label>
-														<?php
+													<?php
 														$sql2 = "SELECT * FROM tblfacility";
 														$query2 = $dbh->prepare($sql2);
 														$query2->execute();
@@ -179,11 +184,11 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 															?>
 															<div class="checkbox">
 																<label>
-																	<input type="checkbox" name="roomfac[]" value="<?php echo htmlentities($row3->FacilityTitle); ?>">
-																	<?php echo htmlentities($row3->FacilityTitle); ?>
+																	<input type="checkbox" name="roomfac[]" value="<?php echo htmlentities($row3->facilitytitle); ?>">
+																	<?php echo htmlentities($row3->facilitytitle); ?>
 																</label>
 															</div>
-														<?php } ?>
+													<?php } ?>
 
 														</select> </div>
 

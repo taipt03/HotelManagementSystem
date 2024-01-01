@@ -17,7 +17,7 @@
 			} else {
 				$img=md5($img).time().$extension;
 				move_uploaded_file($_FILES["image"]["tmp_name"],"images/".$img);
-				$sql="insert into tblfacility(FacilityTitle,Description,Image)values(:ftitle,:facdes,:img)";
+				$sql="INSERT INTO tblfacility(FacilityTitle,Description,Image)VALUES(:ftitle,:facdes,:img)";
 				$query=$dbh->prepare($sql);
 				$query->bindParam(':ftitle',$ftitle,PDO::PARAM_STR);
 				$query->bindParam(':facdes',$facdes,PDO::PARAM_STR);

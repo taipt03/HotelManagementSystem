@@ -92,6 +92,16 @@ if (isset($_POST['submit'])) {
                                                     </thead>
                                                     <tbody>
                                                         <?php
+
+                                                        $host = 'localhost';
+                                                        $dbname = 'hotel_management';
+                                                        $user = 'postgres';
+                                                        $password = 'admin';
+
+                                                        $dsn = "pgsql:host=$host;dbname=$dbname";
+                                                        $dbh = new PDO($dsn, $user, $password);
+
+                                                        $tableName = 'tblcontact';
                                                         if (isset($_GET['pageno'])) {
                                                             $pageno = $_GET['pageno'];
                                                         } else {
@@ -100,15 +110,38 @@ if (isset($_POST['submit'])) {
                                                         // Formula for pagination
                                                         $no_of_records_per_page = 3;
                                                         $offset = ($pageno - 1) * $no_of_records_per_page;
-                                                        $ret = "SELECT ID FROM tblcontact";
+
+
+                                                        // $ret = "SELECT ID FROM tblcontact";
+                                                        // $query1 = $dbh->prepare($ret);
+                                                        // $query1->execute();
+                                                        // $results1 = $query1->fetchAll(PDO::FETCH_OBJ);
+                                                        // $total_rows = $query1->rowCount();
+                                                        // $total_pages = ceil($total_rows / $no_of_records_per_page);
+                                                        $start_date = $_POST['fromdate'];
+                                                        $end_date = $_POST['todate'];
+
+                                                        $ret = "SELECT COUNT(*) FROM $tableName WHERE enquirydate BETWEEN :start_date AND :end_date";
                                                         $query1 = $dbh->prepare($ret);
+                                                        $query1->bindParam(':start_date', $start_date);
+                                                        $query1->bindParam(':end_date', $end_date);
                                                         $query1->execute();
-                                                        $results1 = $query1->fetchAll(PDO::FETCH_OBJ);
-                                                        $total_rows = $query1->rowCount();
+                                                        $total_rows = $query1->fetchColumn();
                                                         $total_pages = ceil($total_rows / $no_of_records_per_page);
 
-                                                        $sql = "SELECT * from tblcontact where date(EnquiryDate) between '$fdate' and '$tdate' LIMIT $offset, $no_of_records_per_page";
+                                                        // $sql = "SELECT * from tblcontact where date(EnquiryDate) between '$fdate' and '$tdate' LIMIT $offset, $no_of_records_per_page";
+                                                        // $query = $dbh->prepare($sql);
+                                                        // $query->execute();
+                                                        // $results = $query->fetchAll(PDO::FETCH_OBJ);
+
+                                                        $sql = "SELECT tbluser.*, tblcontact.message, tblcontact.id, tblcontact.isread, tblcontact.enquirydate
+                                                        FROM $tableName 
+                                                        JOIN tbluser ON tblcontact.userid = tbluser.id 
+                                                        WHERE tblcontact.enquirydate BETWEEN :start_date AND :end_date
+                                                        OFFSET $offset LIMIT $no_of_records_per_page";
                                                         $query = $dbh->prepare($sql);
+                                                        $query->bindParam(':start_date', $start_date);
+                                                        $query->bindParam(':end_date', $end_date);
                                                         $query->execute();
                                                         $results = $query->fetchAll(PDO::FETCH_OBJ);
 
@@ -117,19 +150,29 @@ if (isset($_POST['submit'])) {
                                                             foreach ($results as $row) {               ?>
                                                                 <tr>
                                                                     <td><?php echo htmlentities($cnt); ?></td>
-                                                                    <td><?php echo htmlentities($row->Name); ?></td>
-                                                                    <td><?php echo htmlentities($row->Email); ?></td>
-                                                                    <td><?php echo htmlentities($row->MobileNumber); ?></td>
+                                                                    <td><?php echo htmlentities($row->name); ?></td>
+                                                                    <td><?php echo htmlentities($row->email); ?></td>
+                                                                    <td><?php echo htmlentities($row->mobilenumber); ?></td>
 
                                                                     <td>
-                                                                        <span class="badge badge-primary"><?php echo htmlentities($row->EnquiryDate); ?></span>
+                                                                        <span class="badge badge-primary"><?php echo htmlentities($row->enquirydate); ?></span>
                                                                     </td>
-                                                                    <td><a href="view-enquiry.php?viewid=<?php echo htmlentities($row->ID); ?>" class="btn btn-info btn-sm">View Details</a></td>
+                                                                    <td><a href="view-enquiry.php?viewid=<?php echo htmlentities($row->id); ?>" class="btn btn-info btn-sm">View Details</a></td>
                                                                 </tr>
 
 
                                                         <?php $cnt = $cnt + 1;
                                                             }
+                                                        } else {
+                                                            ?>
+                                                            <table class="table table-bordered table-striped table-vcenter js-dataTable-full-pagination">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="5" style="color:red; font-size:22px; text-align:center">No reportss found between the specified dates</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <?php
                                                         } ?>
 
                                                     </tbody>

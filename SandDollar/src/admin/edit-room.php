@@ -16,8 +16,10 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 		$roomdes = $_POST['roomdes'];
 		$nobed = $_POST['nobed'];
 		$eid = $_GET['editid'];
+		$price = $_GET['price'];
+		$quantity = $_GET['quantity'];
 
-		$sql = "update tblroom set RoomType=:roomtype,RoomName=:roomname,MaxAdult=:maxadult,MaxChild=:maxchild,RoomDesc=:roomdes,NoofBed=:nobed,RoomFacility=:roomfac where ID=:eid";
+		$sql = "UPDATE tblroom SET roomtype=:roomtype,roomname=:roomname,maxadult=:maxadult,maxchild=:maxchild,roomdesc=:roomdes,noofbed=:nobed,roomfacility=:roomfac, price:=price, quantity=quantity where id=:eid";
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':roomtype', $roomtype, PDO::PARAM_STR);
 		$query->bindParam(':roomname', $roomname, PDO::PARAM_STR);
@@ -27,6 +29,8 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 		$query->bindParam(':nobed', $nobed, PDO::PARAM_STR);
 		$query->bindParam(':roomfac', $roomfac, PDO::PARAM_STR);
 		$query->bindParam(':eid', $eid, PDO::PARAM_STR);
+		$query->bindParam('price', $price, PDO::PARAM_STR);
+		$query->bindParam('quantity', $quantity, PDO::PARAM_STR);
 		$query->execute();
 
 		$query->execute();
@@ -131,64 +135,104 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 											<div class="form-body">
 
 												<form method="post" enctype="multipart/form-data">
-													<?php
+												<?php
+												    $host = 'localhost';
+													$dbname = 'hotel_management';
+													$user = 'postgres';
+													$password = 'admin';
+	
+													$dsn = "pgsql:host=$host;dbname=$dbname";
+													$dbh = new PDO($dsn, $user, $password);
+													
 													$eid = $_GET['editid'];
-													$sql = "SELECT * from  tblroom where ID=$eid";
+													$sql = "SELECT * FROM tblroom WHERE id = $eid";
 													$query = $dbh->prepare($sql);
 													$query->execute();
 													$results = $query->fetchAll(PDO::FETCH_OBJ);
 													$cnt = 1;
-													if ($query->rowCount() > 0) {
-														foreach ($results as $row) {               ?>
-															<div class="form-group"> <label for="exampleInputEmail1">Room Type or Category</label> <select type="text" name="roomtype" id="roomtype" value="" class="form-control" required="true">
-																	<option value="<?php echo $row->RoomType; ?>"><?php echo $row->RoomType; ?></option>
-																	<?php
 
-																	$sql2 = "SELECT * from   tblcategory ";
+													if ($query->rowCount() > 0) {
+														foreach ($results as $row) {               
+													?>
+															<div class="form-group">
+																<label for="exampleInputEmail1">Room Type or Category</label>
+																<select type="text" name="roomtype" id="roomtype" value="" class="form-control" required="true">
+																	<option value="<?php echo $row->roomtype; ?>"><?php echo $row->roomtype; ?></option>
+																	<?php
+																	$sql2 = "SELECT * FROM tblcategory";
 																	$query2 = $dbh->prepare($sql2);
 																	$query2->execute();
 																	$result2 = $query2->fetchAll(PDO::FETCH_OBJ);
 
 																	foreach ($result2 as $row2) {
 																	?>
-																		<option value="<?php echo htmlentities($row2->ID); ?>"><?php echo htmlentities($row2->CategoryName); ?></option>
-																	<?php } ?>
-
-
-																</select> </div>
-															<div class="form-group"> <label for="exampleInputEmail1">Room Name</label> <input type="text" class="form-control" name="roomname" value="<?php echo $row->RoomName; ?>" required='true'> </div>
-															<div class="form-group"> <label for="exampleInputEmail1">Max Adult</label> <input type="text" class="form-control" name="maxadult" value="<?php echo $row->MaxAdult; ?>" pattern="[0-9]+" required='true'> </div>
-															<div class="form-group"> <label for="exampleInputEmail1">Max Child</label> <input type="text" class="form-control" name="maxchild" value="<?php echo $row->MaxChild; ?>" pattern="[0-9]+" required='true'> </div>
-															<div class="form-group"> <label for="exampleInputEmail1">Room Description</label> <textarea type="text" class="form-control" name="roomdes"><?php echo $row->RoomDesc; ?></textarea> </div>
-															<div class="form-group"> <label for="exampleInputEmail1">No. of Bed</label> <input type="text" class="form-control" name="nobed" value="<?php echo $row->NoofBed; ?>" required='true'> </div>
-															<div class="form-group"> <label for="exampleInputEmail1">Room Image</label> &nbsp;&nbsp;
-																<img src="images/<?php echo $row->Image; ?>" width="100" height="100" value="<?php echo $row->Image; ?>">
-																<a href="changeimage.php?editid=<?php echo $row->ID; ?>"> &nbsp; Edit Image</a>
+																		<option value="<?php echo htmlentities($row2->id); ?>"><?php echo htmlentities($row2->categoryname); ?></option>
+																	<?php
+																	}
+																	?>
+																</select>
 															</div>
-															<div class="form-group"> <label for="exampleInputEmail1">Room Facility</label>
-															<label for="exampleInputEmail1">Room Facility</label>
+															<div class="form-group">
+																<label for="exampleInputEmail1">Room Name</label>
+																<input type="text" class="form-control" name="roomname" value="<?php echo $row->roomname; ?>" required='true'>
+															</div>
+															<div class="form-group">
+																<label for="exampleInputEmail1">Max Adult</label>
+																<input type="text" class="form-control" name="maxadult" value="<?php echo $row->maxadult; ?>" pattern="[0-9]+" required='true'>
+															</div>
+															<div class="form-group">
+																<label for="exampleInputEmail1">Max Child</label>
+																<input type="text" class="form-control" name="maxchild" value="<?php echo $row->maxchild; ?>" pattern="[0-9]+" required='true'>
+															</div>
+															<div class="form-group">
+																<label for="exampleInputEmail1">Price</label>
+																<input type="text" class="form-control" name="maxadult" value="<?php echo $row->price; ?>" pattern="[0-9]+" required='true'>
+															</div>
+															<div class="form-group">
+																<label for="exampleInputEmail1">Quantity</label>
+																<input type="text" class="form-control" name="maxadult" value="<?php echo $row->quantity; ?>" pattern="[0-9]+" required='true'>
+															</div>
+															<div class="form-group">
+																<label for="exampleInputEmail1">Room Description</label>
+																<textarea type="text" class="form-control" name="roomdes"><?php echo $row->roomdesc; ?></textarea>
+															</div>
+															<div class="form-group">
+																<label for="exampleInputEmail1">No. of Bed</label>
+																<input type="text" class="form-control" name="nobed" value="<?php echo $row->noofbed; ?>" required='true'>
+															</div>
+															<div class="form-group">
+																<label for="exampleInputEmail1">Room Image</label>
+																&nbsp;&nbsp;
+																<img src="images/<?php echo $row->image; ?>" width="100" height="100" value="<?php echo $row->image; ?>">
+																<a href="changeimage.php?editid=<?php echo $row->id; ?>"> &nbsp; Edit Image</a>
+															</div>
+															<div class="form-group">
+																<label for="exampleInputEmail1">Room Facility</label>
 																<?php
 																$sql2 = "SELECT * FROM tblfacility";
 																$query2 = $dbh->prepare($sql2);
 																$query2->execute();
 																$result2 = $query2->fetchAll(PDO::FETCH_OBJ);
-																$availableFacilities = explode(',', $row->RoomFacility); 
+																$availableFacilities = explode(',', $row->roomfacility);
 
 																foreach ($result2 as $row3) {
-																	$isChecked = in_array($row3->FacilityTitle, $availableFacilities) ? 'checked' : '';
-																	?>
+																	$isChecked = in_array($row3->facilitytitle, $availableFacilities) ? 'checked' : '';
+																?>
 																	<div class="checkbox">
 																		<label>
-																			<input type="checkbox" name="roomfac[]" value="<?php echo htmlentities($row3->FacilityTitle); ?>" <?php echo $isChecked; ?>>
-																			<?php echo htmlentities($row3->FacilityTitle); ?>
+																			<input type="checkbox" name="roomfac[]" value="<?php echo htmlentities($row3->facilitytitle); ?>" <?php echo $isChecked; ?>>
+																			<?php echo htmlentities($row3->facilitytitle); ?>
 																		</label>
 																	</div>
-																<?php } ?>
-
-
-															<?php $cnt = $cnt + 1;
+																<?php
+																}
+																?>
+															</div>
+													<?php
+															$cnt = $cnt + 1;
 														}
-													} ?>
+													}
+													?>
 																</select> </div>
 
 

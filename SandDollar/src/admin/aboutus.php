@@ -10,7 +10,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 		$hbmsaid = $_SESSION['hbmsaid'];
 		$pagetitle = $_POST['pagetitle'];
 		$pagedes = $_POST['pagedes'];
-		$sql = "update tblpage set PageTitle=:pagetitle,PageDescription=:pagedes where  PageType='aboutus'";
+		$sql = "UPDATE tblpage SET pagetitle = :pagetitle, pagedescription = :pagedes WHERE pagetype = 'aboutus'";		
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':pagetitle', $pagetitle, PDO::PARAM_STR);
 		$query->bindParam(':pagedes', $pagedes, PDO::PARAM_STR);
@@ -120,23 +120,37 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 											<div class="form-body">
 
 												<form method="post" enctype="multipart/form-data">
-													<?php
+												<?php
+// Database connection parameters
+													$host = 'localhost';
+													$dbname = 'hotel_management';
+													$user = 'postgres';
+													$password = 'admin';
+													$dsn = "pgsql:host=$host;dbname=$dbname";
+													$dbh = new PDO($dsn, $user, $password);
 
-													$sql = "SELECT * from  tblpage where PageType='aboutus'";
+													$sql = "SELECT * FROM tblpage WHERE pagetype = 'aboutus'";
 													$query = $dbh->prepare($sql);
 													$query->execute();
 													$results = $query->fetchAll(PDO::FETCH_OBJ);
-													$cnt = 1;
-													if ($query->rowCount() > 0) {
-														foreach ($results as $row) {               ?>
-															<div class="form-group"> <label for="exampleInputEmail1">Page Title</label> <input type="text" name="pagetitle" id="pagetitle" required="true" value="<?php echo $row->PageTitle; ?>" class="form-control"> </div>
-															<div class="form-group"> <label for="exampleInputEmail1">Page Description</label>
-																<textarea type="text" name="pagedes" id="pagedes" required="true" class="form-control" rows="10"><?php echo $row->PageDescription; ?></textarea>
-															</div>
 
-													<?php $cnt = $cnt + 1;
+													if ($query->rowCount() > 0) {
+														foreach ($results as $row) {
+															$pageTitle = $row->pagetitle;
+															$pageDescription = $row->pagedescription;
+															?>
+															<div class="form-group">
+																<label for="pagetitle">Page Title</label>
+																<input type="text" name="pagetitle" id="pagetitle" required="true" value="<?php echo htmlentities($pageTitle); ?>" class="form-control">
+															</div>
+															<div class="form-group">
+																<label for="pagedes">Page Description</label>
+																<textarea name="pagedes" id="pagedes" required="true" class="form-control" rows="10"><?php echo htmlentities($pageDescription); ?></textarea>
+															</div>
+															<?php
 														}
-													} ?>
+													}
+													?>
 
 
 													<button type="submit" class="btn btn-default" name="submit">Update</button>

@@ -72,80 +72,117 @@ if (isset($_POST['submit'])) {
                                             </div>
 
                                             <div class="form-body">
-                                                <?php
-                                                $fdate = $_POST['fromdate'];
-                                                $tdate = $_POST['todate'];
+                                            <?php
+// Database connection parameters
+                                                $host = 'localhost';
+                                                $dbname = 'hotel_management';
+                                                $user = 'postgres';
+                                                $password = 'admin';
 
-                                                ?>
-                                                <h4 align="center" style="color:blue">Report from <?php echo $fdate ?> to <?php echo $tdate ?></h4>
-                                                <table class="table table-bordered table-striped table-vcenter js-dataTable-full-pagination">
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="text-center">S.No</th>
-                                                            <th>Booking Number</th>
-                                                            <th>Name</th>
-                                                            <th>Email</th>
-                                                            <th>Mobile Number</th>
-                                                            <th>Booking Date</th>
-                                                            <th>Status</th>
-                                                            <th>Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <?php
-                                                        if (isset($_GET['pageno'])) {
-                                                            $pageno = $_GET['pageno'];
-                                                        } else {
-                                                            $pageno = 1;
-                                                        }
-                                                        // Formula for pagination
-                                                        $no_of_records_per_page = 10;
-                                                        $offset = ($pageno - 1) * $no_of_records_per_page;
-                                                        $ret = "SELECT ID FROM tblbooking";
-                                                        $query1 = $dbh->prepare($ret);
-                                                        $query1->execute();
-                                                        $results1 = $query1->fetchAll(PDO::FETCH_OBJ);
-                                                        $total_rows = $query1->rowCount();
-                                                        $total_pages = ceil($total_rows / $no_of_records_per_page);
+                                                $dsn = "pgsql:host=$host;dbname=$dbname";
+                                                $dbh = new PDO($dsn, $user, $password);
 
-                                                        $sql = "SELECT tbluser.*,tblbooking.BookingNumber,tblbooking.ID,tblbooking.Status,tblbooking.BookingDate from tblbooking join tbluser on tblbooking.UserID=tbluser.ID where date(BookingDate) between '$fdate' and '$tdate' LIMIT $offset, $no_of_records_per_page";
-                                                        $query = $dbh->prepare($sql);
-                                                        $query->execute();
-                                                        $results = $query->fetchAll(PDO::FETCH_OBJ);
+                                                $tableName = 'tblbooking';
+                                                $no_of_records_per_page = 10;
 
-                                                        $cnt = 1;
-                                                        if ($query->rowCount() > 0) {
-                                                            foreach ($results as $row) {               ?>
+                                                if (isset($_GET['pageno'])) {
+                                                    $pageno = $_GET['pageno'];
+                                                } else {
+                                                    $pageno = 1;
+                                                }
+
+                                                $offset = ($pageno - 1) * $no_of_records_per_page;
+
+                                                // Get the start and end dates from user input (modify this according to your needs)
+                                                $start_date = $_POST['fromdate'];
+                                                $end_date = $_POST['todate'];
+
+                                                // Fetch total number of rows
+                                                $ret = "SELECT COUNT(*) FROM $tableName WHERE bookingdate BETWEEN :start_date AND :end_date";
+                                                $query1 = $dbh->prepare($ret);
+                                                $query1->bindParam(':start_date', $start_date);
+                                                $query1->bindParam(':end_date', $end_date);
+                                                $query1->execute();
+                                                $total_rows = $query1->fetchColumn();
+                                                $total_pages = ceil($total_rows / $no_of_records_per_page);
+
+                                                // Fetch booking data with pagination
+                                                $sql = "SELECT tbluser.*, tblbooking.bookingnumber, tblbooking.id, tblbooking.status, tblbooking.bookingdate, tblbooking.paymentmethod 
+                                                        FROM $tableName 
+                                                        JOIN tbluser ON tblbooking.userid = tbluser.id 
+                                                        WHERE tblbooking.bookingdate BETWEEN :start_date AND :end_date
+                                                        OFFSET $offset LIMIT $no_of_records_per_page";
+                                                $query = $dbh->prepare($sql);
+                                                $query->bindParam(':start_date', $start_date);
+                                                $query->bindParam(':end_date', $end_date);
+                                                $query->execute();
+                                                $results = $query->fetchAll(PDO::FETCH_OBJ);
+
+                                                $cnt = 1;
+                                                if ($query->rowCount() > 0) {
+                                                    ?>
+                                                    <table class="table table-bordered table-striped table-vcenter js-dataTable-full-pagination">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>S.No</th>
+                                                                <th>Booking Number</th>
+                                                                <th>Name</th>
+                                                                <th>Email</th>
+                                                                <th>Mobile Number</th>
+                                                                <th>Booking Date</th>
+                                                                <th>Status</th>
+                                                                <th>Payment Method</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php
+                                                            foreach ($results as $row) {
+                                                                ?>
                                                                 <tr>
                                                                     <td class="text-center"><?php echo htmlentities($cnt); ?></td>
-                                                                    <td><?php echo htmlentities($row->BookingNumber); ?></td>
-                                                                    <td><?php echo htmlentities($row->FullName); ?></td>
-                                                                    <td><?php echo htmlentities($row->Email); ?></td>
-                                                                    <td><?php echo htmlentities($row->MobileNumber); ?></td>
-                                                                    <td><span class="badge badge-primary"><?php echo htmlentities($row->BookingDate); ?></span>
-                                                                    </td>
+                                                                    <td><?php echo htmlentities($row->bookingnumber); ?></td>
+                                                                    <td><?php echo htmlentities($row->fullname); ?></td>
+                                                                    <td><?php echo htmlentities($row->email); ?></td>
+                                                                    <td><?php echo htmlentities($row->mobilenumber); ?></td>
+                                                                    <td><span class="badge badge-primary"><?php echo htmlentities($row->bookingdate); ?></span></td>
 
                                                                     <td>
-                                                                        <?php $status = $row->Status;
+                                                                        <?php
+                                                                        $status = $row->status;
                                                                         if ($status == '') :
-                                                                        ?>
+                                                                            ?>
                                                                             <span class="badge badge-warning"><?php echo htmlentities('Not Updated Yet'); ?></span>
                                                                         <?php elseif ($status == 'Cancelled') : ?>
-                                                                            <span class="badge badge-danger"><?php echo htmlentities($row->Status); ?></span>
+                                                                            <span class="badge badge-danger"><?php echo htmlentities($row->status); ?></span>
                                                                         <?php elseif ($status == 'Approved') : ?>
-                                                                            <span class="badge badge-success"><?php echo htmlentities($row->Status); ?></span>
+                                                                            <span class="badge badge-success"><?php echo htmlentities($row->status); ?></span>
                                                                         <?php endif; ?>
                                                                     </td>
 
-                                                                    <td class="d-none d-sm-table-cell"><a href="view-booking-detail.php?bookingid=<?php echo htmlentities($row->BookingNumber); ?>" class="btn btn-info btn-sm">View Details</a></td>
+                                                                    <td><?php echo htmlentities($row->paymentmethod); ?></td>
+
+                                                                    <td class="d-none d-sm-table-cell"><a href="view-booking-detail.php?bookingid=<?php echo htmlentities($row->bookingnumber); ?>" class="btn btn-info btn-sm">View Details</a></td>
                                                                 </tr>
-
-
-                                                        <?php $cnt = $cnt + 1;
+                                                                <?php
+                                                                $cnt = $cnt + 1;
                                                             }
-                                                        } ?>
-                                                    </tbody>
-                                                </table>
+                                                            ?>
+                                                        </tbody>
+                                                    </table>
+                                                    <?php
+                                                } else {
+                                                    ?>
+                                                    <table class="table table-bordered table-striped table-vcenter js-dataTable-full-pagination">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td colspan="9" style="color:red; font-size:22px; text-align:center">No bookings found between the specified dates</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <?php
+                                                }
+                                                ?>
                                                 <div align="left">
                                                     <ul class="pagination">
                                                         <li><a href="?pageno=1"><strong>First></strong></a></li>

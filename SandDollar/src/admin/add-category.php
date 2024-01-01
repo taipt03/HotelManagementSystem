@@ -9,7 +9,6 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 		$hbmsaid = $_SESSION['hbmsaid'];
 		$cname = $_POST['cname'];
 		$catdes = $_POST['catdes'];
-		$price = $_POST['price'];
 	
 		// Check for duplicate CategoryName before insertion
 		$checkSql = "SELECT COUNT(*) AS count FROM tblcategory WHERE CategoryName = :cname";
@@ -21,11 +20,10 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 		if ($count > 0) {
 			echo '<script>alert("Category with the same name already exists.")</script>';
 		} else {
-			$sql = "INSERT INTO tblcategory (CategoryName, Description, Price) VALUES (:cname, :catdes, :price)";
+			$sql = "INSERT INTO tblcategory (CategoryName, Description) VALUES (:cname, :catdes)";
 			$query = $dbh->prepare($sql);
 			$query->bindParam(':cname', $cname, PDO::PARAM_STR);
 			$query->bindParam(':catdes', $catdes, PDO::PARAM_STR);
-			$query->bindParam(':price', $price, PDO::PARAM_STR);
 			$query->execute();
 	
 			$lastInsertId = $dbh->lastInsertId();
@@ -137,7 +135,6 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 												<form method="post">
 													<div class="form-group"> <label for="exampleInputEmail1">Category Title</label> <input type="text" class="form-control" name="cname" value="" required='true'> </div>
 													<div class="form-group"> <label for="exampleInputEmail1">Description</label> <textarea type="text" class="form-control" name="catdes" value=""></textarea> </div>
-													<div class="form-group"> <label for="exampleInputEmail1">Price</label> <input type="text" class="form-control" name="price" value="" required pattern="[0-9]+"> </div>
 													<button type="submit" class="btn btn-default" name="submit">Add</button>
 												</form>
 											</div>

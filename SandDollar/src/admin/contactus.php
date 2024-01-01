@@ -14,7 +14,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 		$pagedes = $_POST['pagedes'];
 		$mobnum = $_POST['mobnum'];
 		$email = $_POST['email'];
-		$sql = "update tblpage set PageTitle=:pagetitle,PageDescription=:pagedes,Email=:email,MobileNumber=:mobnum where  PageType='contactus'";
+		$sql = "UPDATE tblpage SET pagetitle=:pagetitle,pagedescription=:pagedes,email=:email,mobilenumber=:mobnum WHERE  pagetype='contactus'";
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':pagetitle', $pagetitle, PDO::PARAM_STR);
 		$query->bindParam(':pagedes', $pagedes, PDO::PARAM_STR);
@@ -124,19 +124,26 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 											<div class="form-body">
 
 												<form method="post" enctype="multipart/form-data">
-													<?php
+												<?php
 
-													$sql = "SELECT * from  tblpage where PageType='contactus'";
+													$host = 'localhost';
+													$dbname = 'hotel_management';
+													$user = 'postgres';
+													$password = 'admin';
+
+													$dsn = "pgsql:host=$host;dbname=$dbname";
+													$dbh = new PDO($dsn, $user, $password);
+
+													$sql = "SELECT * FROM tblpage WHERE PageType = 'aboutus'";
 													$query = $dbh->prepare($sql);
 													$query->execute();
 													$results = $query->fetchAll(PDO::FETCH_OBJ);
-													$cnt = 1;
 													if ($query->rowCount() > 0) {
 														foreach ($results as $row) {               ?>
-															<div class="form-group"> <label for="exampleInputEmail1">Page Title</label> <input type="text" name="pagetitle" id="pagetitle" required="true" value="<?php echo $row->PageTitle; ?>" class="form-control"> </div>
-															<div class="form-group"> <label for="exampleInputEmail1">Email</label> <input type="text" name="email" id="email" required="true" value="<?php echo $row->Email; ?>" class="form-control"> </div>
-															<div class="form-group"> <label for="exampleInputEmail1">Mobile Number</label> <input type="text" name="mobnum" id="mobnum" required="true" value="<?php echo $row->MobileNumber; ?>" class="form-control"> </div>
-															<div class="form-group"> <label for="exampleInputEmail1">Page Description</label> <textarea type="text" name="pagedes" id="pagedes" required="true" class="form-control"><?php echo $row->PageDescription; ?></textarea> </div>
+															<div class="form-group"> <label for="exampleInputEmail1">Page Title</label> <input type="text" name="pagetitle" id="pagetitle" required="true" value="<?php echo $row->pagetitle; ?>" class="form-control"> </div>
+															<div class="form-group"> <label for="exampleInputEmail1">Email</label> <input type="text" name="email" id="email" required="true" value="<?php echo $row->email; ?>" class="form-control"> </div>
+															<div class="form-group"> <label for="exampleInputEmail1">Mobile Number</label> <input type="text" name="mobnum" id="mobnum" required="true" value="<?php echo $row->mobilenumber; ?>" class="form-control"> </div>
+															<div class="form-group"> <label for="exampleInputEmail1">Page Description</label> <textarea type="text" name="pagedes" id="pagedes" required="true" class="form-control"><?php echo $row->pagedescription; ?></textarea> </div>
 
 													<?php $cnt = $cnt + 1;
 														}
