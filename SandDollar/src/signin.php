@@ -6,7 +6,7 @@ include('includes/dbconnection.php');
 if (isset($_POST['login'])) {
 	$email = $_POST['email'];
 	$password = md5($_POST['password']);
-	$sql = "SELECT ID FROM tbluser WHERE Email=:email and Password=:password";
+	$sql = "SELECT ID FROM tbluser WHERE email=:email and password=:password";
 	$query = $dbh->prepare($sql);
 	$query->bindParam(':email', $email, PDO::PARAM_STR);
 	$query->bindParam(':password', $password, PDO::PARAM_STR);

@@ -10,7 +10,7 @@
 		$AName=$_POST['adminname'];
 		$mobno=$_POST['mobilenumber'];
 		$email=$_POST['email'];
-		$sql="update tbladmin set AdminName=:adminname,MobileNumber=:mobilenumber,Email=:email where ID=:aid";
+		$sql="UPDATE tbladmin SET adminname=:adminname,mobilenumber=:mobilenumber,email=:email WHERE ID=:aid";
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':adminname',$AName,PDO::PARAM_STR);
 		$query->bindParam(':email',$email,PDO::PARAM_STR);

@@ -61,7 +61,7 @@ if (isset($_SESSION['login_time'])) {
 				<div class="gallery-grids-top">
 					<div class="gallery-grids">
 						<?php
-						$sql = "SELECT * from tblroom";
+						$sql = "SELECT * FROM tblroom";
 						$query = $dbh->prepare($sql);
 						$query->execute();
 						$results = $query->fetchAll(PDO::FETCH_OBJ);

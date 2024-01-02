@@ -84,7 +84,7 @@ if (isset($_SESSION['login_time'])) {
 				<h3>Services</h3>
 				<div class="features-grids">
 					<?php
-					$sql = "SELECT * from tblfacility order by rand() limit 4";
+					$sql = "SELECT * FROM tblfacility ORDER BY rand() LIMIT 4";
 					$query = $dbh->prepare($sql);
 					$query->execute();
 					$results = $query->fetchAll(PDO::FETCH_OBJ);

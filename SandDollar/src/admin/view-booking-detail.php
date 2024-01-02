@@ -14,7 +14,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 		$remark = $_POST['remark'];
 
 
-		$sql = "update tblbooking set Status=:status,Remark=:remark where BookingNumber=:bookingid";
+		$sql = "UPDATE tblbooking SET status=:status,remark=:remark WHERE bookingnumber=:bookingid";
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':status', $status, PDO::PARAM_STR);
 		$query->bindParam(':remark', $remark, PDO::PARAM_STR);
@@ -124,12 +124,12 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 
 												$bookid = $_GET['bookingid'];
 
-												$sql = "SELECT tblbooking.BookingNumber,tbluser.FullName,tbluser.MobileNumber,tbluser.Email,tblbooking.IDType,tblbooking.Gender,tblbooking.Address,tblbooking.CheckinDate,tblbooking.CheckoutDate,tblbooking.BookingDate,tblbooking.Remark,tblbooking.Status,tblbooking.UpdationDate,tblcategory.CategoryName,tblcategory.Description,tblcategory.Price,tblroom.RoomName,tblroom.MaxAdult,tblroom.MaxChild,tblroom.RoomDesc,tblroom.NoofBed,tblroom.Image,tblroom.RoomFacility 
-from tblbooking 
-join tblroom on tblbooking.RoomId=tblroom.ID 
-join tblcategory on tblcategory.ID=tblroom.RoomType 
-join tbluser on tblbooking.UserID=tbluser.ID  
-where tblbooking.BookingNumber=:bookid";
+												$sql = "SELECT tblbooking.bookingnumber,tbluser.fullname,tbluser.mobilenumber,tbluser.email,tblbooking.IDtype,tblbooking.gender,tblbooking.address,tblbooking.checkindate,tblbooking.checkoutdate,tblbooking.bookingdate,tblbooking.remark,tblbooking.status,tblbooking.updationdate,tblcategory.categoryname,tblcategory.description,tblcategory.price,tblroom.roomname,tblroom.maxadult,tblroom.maxchild,tblroom.roomdesc,tblroom.noofbed,tblroom.image,tblroom.roomfacility 
+FROM tblbooking 
+JOIN tblroom ON tblbooking.roomID=tblroom.ID 
+JOIN tblcategory ON tblcategory.ID=tblroom.roomtype 
+JOIN tbluser ON tblbooking.userID=tbluser.ID  
+WHERE tblbooking.bookingnumber=:bookid";
 												$query = $dbh->prepare($sql);
 												$query->bindParam(':bookid', $bookid, PDO::PARAM_STR);
 												$query->execute();

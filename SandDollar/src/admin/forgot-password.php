@@ -7,14 +7,14 @@ if (isset($_POST['submit'])) {
 	$email = $_POST['email'];
 	$mobile = $_POST['mobile'];
 	$newpassword = md5($_POST['newpassword']);
-	$sql = "SELECT Email FROM tbladmin WHERE Email=:email and MobileNumber=:mobile";
+	$sql = "SELECT email FROM tbladmin WHERE email=:email AND mobilenumber=:mobile";
 	$query = $dbh->prepare($sql);
 	$query->bindParam(':email', $email, PDO::PARAM_STR);
 	$query->bindParam(':mobile', $mobile, PDO::PARAM_STR);
 	$query->execute();
 	$results = $query->fetchAll(PDO::FETCH_OBJ);
 	if ($query->rowCount() > 0) {
-		$con = "update tbladmin set Password=:newpassword where Email=:email and MobileNumber=:mobile";
+		$con = "UPDATE tbladmin SET password=:newpassword WHERE email=:email END mobilenumber=:mobile";
 		$chngpwd1 = $dbh->prepare($con);
 		$chngpwd1->bindParam(':email', $email, PDO::PARAM_STR);
 		$chngpwd1->bindParam(':mobile', $mobile, PDO::PARAM_STR);

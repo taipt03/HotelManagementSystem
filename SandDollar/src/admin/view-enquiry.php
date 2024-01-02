@@ -7,7 +7,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 } else {
 	$vid = $_GET['viewid'];
 	$isread = 1;
-	$sql = "update tblcontact set IsRead=:isread where ID=:vid";
+	$sql = "UPDATE tblcontact SET isread=:isread WHERE ID=:vid";
 	$query = $dbh->prepare($sql);
 	$query->bindParam(':isread', $isread, PDO::PARAM_STR);
 	$query->bindParam(':vid', $vid, PDO::PARAM_STR);
@@ -111,7 +111,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 
 												<?php
 
-												$sql = "SELECT * from  tblcontact where ID=$vid";
+												$sql = "SELECT * FROM  tblcontact WHERE ID=$vid";
 												$query = $dbh->prepare($sql);
 												$query->execute();
 												$results = $query->fetchAll(PDO::FETCH_OBJ);

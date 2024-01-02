@@ -68,7 +68,7 @@ if (isset($_SESSION['login_time'])) {
 					<h2>Facilities</h2>
 					<div class="services1">
 						<?php
-						$sql = "SELECT * from tblfacility";
+						$sql = "SELECT * FROM tblfacility";
 						$query = $dbh->prepare($sql);
 						$query->execute();
 						$results = $query->fetchAll(PDO::FETCH_OBJ);

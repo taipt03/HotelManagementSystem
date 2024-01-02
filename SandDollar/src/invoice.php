@@ -83,12 +83,12 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
       <div class="bs-docs-example">
         <?php
         $invid = $_GET['invid'];
-        $sql = "SELECT tblbooking.BookingNumber,tbluser.FullName,DATEDIFF(tblbooking.CheckoutDate,tblbooking.CheckinDate) as ddf,tbluser.MobileNumber,tbluser.Email,tblbooking.IDType,tblbooking.Gender,tblbooking.Address,tblbooking.CheckinDate,tblbooking.CheckoutDate,tblbooking.BookingDate,tblbooking.Remark,tblbooking.Status,tblbooking.UpdationDate,tblcategory.CategoryName,tblcategory.Description,tblcategory.Price,tblroom.RoomName,tblroom.MaxAdult,tblroom.MaxChild,tblroom.RoomDesc,tblroom.NoofBed,tblroom.Image,tblroom.RoomFacility 
-from tblbooking 
-join tblroom on tblbooking.RoomId=tblroom.ID 
-join tblcategory on tblcategory.ID=tblroom.RoomType 
-join tbluser on tblbooking.UserID=tbluser.ID  
-where tblbooking.ID=:invid";
+        $sql = "SELECT tblbooking.bookingnumber,tbluser.fullname,DATEDIFF(tblbooking.checkoutdate,tblbooking.checkindate) as ddf,tbluser.mobilenumber,tbluser.email,tblbooking.IDtype,tblbooking.gender,tblbooking.address,tblbooking.checkindate,tblbooking.checkoutdate,tblbooking.bookingdate,tblbooking.remark,tblbooking.status,tblbooking.updationdate,tblcategory.categoryname,tblcategory.description,tblcategory.price,tblroom.roomname,tblroom.maxadult,tblroom.maxchild,tblroom.roomdesc,tblroom.noofbed,tblroom.image,tblroom.roomfacility 
+FROM tblbooking 
+JOIN tblroom ON tblbooking.roomID=tblroom.ID 
+JOIN tblcategory ON tblcategory.ID=tblroom.roomtype 
+JOIN tbluser ON tblbooking.userID=tbluser.ID  
+WHERE tblbooking.ID=:invid";
         $query = $dbh->prepare($sql);
         $query->bindParam(':invid', $invid, PDO::PARAM_STR);
         $query->execute();

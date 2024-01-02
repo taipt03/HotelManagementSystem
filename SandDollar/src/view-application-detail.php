@@ -77,12 +77,12 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
           <?php
           $vid = $_GET['viewid'];
 
-          $sql = "SELECT tblbooking.BookingNumber,tbluser.FullName,tbluser.MobileNumber,tbluser.Email,tblbooking.ID as tid,tblbooking.IDType,tblbooking.Gender,tblbooking.Address,tblbooking.CheckinDate,tblbooking.CheckoutDate,tblbooking.BookingDate,tblbooking.Remark,tblbooking.Status,tblbooking.UpdationDate,tblcategory.CategoryName,tblcategory.Description,tblcategory.Price,tblroom.RoomName,tblroom.MaxAdult,tblroom.MaxChild,tblroom.RoomDesc,tblroom.NoofBed,tblroom.Image,tblroom.RoomFacility 
-from tblbooking 
-join tblroom on tblbooking.RoomId=tblroom.ID 
-join tblcategory on tblcategory.ID=tblroom.RoomType 
-join tbluser on tblbooking.UserID=tbluser.ID  
-where tblbooking.ID=:vid";
+          $sql = "SELECT tblbooking.bookingnumber,tbluser.fullname,tbluser.mobilenumber,tbluser.email,tblbooking.ID AS tid,tblbooking.IDtype,tblbooking.gender,tblbooking.address,tblbooking.checkindate,tblbooking.checkoutdate,tblbooking.bookingdate,tblbooking.remark,tblbooking.status,tblbooking.updationdate,tblcategory.categoryname,tblcategory.description,tblcategory.price,tblroom.roomname,tblroom.maxadult,tblroom.maxchild,tblroom.roomdesc,tblroom.noofbed,tblroom.image,tblroom.roomfacility 
+FROM tblbooking 
+JOIN tblroom ON tblbooking.roomId=tblroom.ID 
+JOIN tblcategory ON tblcategory.ID=tblroom.roomtype 
+JOIN tbluser ON tblbooking.userID=tbluser.ID  
+WHERE tblbooking.ID=:vid";
           $query = $dbh->prepare($sql);
           $query->bindParam(':vid', $vid, PDO::PARAM_STR);
           $query->execute();

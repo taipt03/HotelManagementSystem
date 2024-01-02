@@ -127,7 +127,7 @@
                                                             $total_rows=$query1->rowCount();
                                                             $total_pages = ceil($total_rows / $no_of_records_per_page);
 
-                                                            $sql="SELECT tbluser.*,tblbooking.BookingNumber,tblbooking.ID,tblbooking.Status,tblbooking.BookingDate from tblbooking join tbluser on tblbooking.UserID=tbluser.ID where UserID='$uid' LIMIT $offset, $no_of_records_per_page";
+                                                            $sql="SELECT tbluser.*,tblbooking.bookingnumber,tblbooking.ID,tblbooking.status,tblbooking.bookingdate FROM tblbooking JOIN tbluser ON tblbooking.userID=tbluser.ID WHERE userID='$uid' LIMIT $offset, $no_of_records_per_page";
                                                             $query = $dbh -> prepare($sql);
                                                             $query->execute();
                                                             $results=$query->fetchAll(PDO::FETCH_OBJ);

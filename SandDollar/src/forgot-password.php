@@ -7,14 +7,14 @@ if (isset($_POST['submit'])) {
 	$email = $_POST['email'];
 	$mobile = $_POST['mobile'];
 	$newpassword = md5($_POST['newpassword']);
-	$sql = "SELECT Email FROM tbluser WHERE Email=:email and MobileNumber=:mobile";
+	$sql = "SELECT email FROM tbluser WHERE email=:email AND mobilenumber=:mobile";
 	$query = $dbh->prepare($sql);
 	$query->bindParam(':email', $email, PDO::PARAM_STR);
 	$query->bindParam(':mobile', $mobile, PDO::PARAM_STR);
 	$query->execute();
 	$results = $query->fetchAll(PDO::FETCH_OBJ);
 	if ($query->rowCount() > 0) {
-		$con = "update tbluser set Password=:newpassword where Email=:email and MobileNumber=:mobile";
+		$con = "UPDATE tbluser SET password=:newpassword WHERE email=:email AND mobilenumber=:mobile";
 		$chngpwd1 = $dbh->prepare($con);
 		$chngpwd1->bindParam(':email', $email, PDO::PARAM_STR);
 		$chngpwd1->bindParam(':mobile', $mobile, PDO::PARAM_STR);
@@ -43,6 +43,7 @@ if (isset($_POST['submit'])) {
 		function hideURLbar() {
 			window.scrollTo(0, 1);
 		}
+
 	</script>
 	<script src="js/jquery-1.11.1.min.js"></script>
 	<script src="js/bootstrap.js"></script>
