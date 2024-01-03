@@ -7,7 +7,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 } else {
 	$vid = $_GET['viewid'];
 	$isread = 1;
-	$sql = "UPDATE tblcontact SET isread=:isread WHERE ID=:vid";
+	$sql = "UPDATE tblcontact SET isread=:isread WHERE id=:vid";
 	$query = $dbh->prepare($sql);
 	$query->bindParam(':isread', $isread, PDO::PARAM_STR);
 	$query->bindParam(':vid', $vid, PDO::PARAM_STR);
@@ -111,7 +111,9 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 
 												<?php
 
-												$sql = "SELECT * FROM  tblcontact WHERE ID=$vid";
+												$sql = "SELECT * FROM  tblcontact
+												JOIN tbluser ON tbluser.id = tblcontact.userid 
+												WHERE tblcontact.id=$vid";
 												$query = $dbh->prepare($sql);
 												$query->execute();
 												$results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -127,15 +129,15 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 
 															<tr>
 																<th scope>Name</th>
-																<td><?php echo ($row->Name); ?></td>
+																<td><?php echo ($row->fullname); ?></td>
 																<th scope>Mobile Number</th>
-																<td><?php echo ($row->MobileNumber); ?></td>
+																<td><?php echo ($row->mobilenumber); ?></td>
 															</tr>
 															<tr>
 																<th scope>Email</th>
-																<td><?php echo ($row->Email); ?></td>
+																<td><?php echo ($row->email); ?></td>
 																<th>Message</th>
-																<td><?php echo ($row->Message); ?></td>
+																<td><?php echo ($row->message); ?></td>
 															</tr>
 
 

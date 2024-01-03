@@ -8,7 +8,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 
 	if (isset($_GET['delid'])) {
 		$rid = intval($_GET['delid']);
-		$sql = "delete from tblroom where ID=:rid";
+		$sql = "DELETE FROM tblroom WHERE id=:rid";
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':rid', $rid, PDO::PARAM_STR);
 		$query->execute();
@@ -144,16 +144,27 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 															$pageno = 1;
 														}
 														// Formula for pagination
-														$no_of_records_per_page = 10;
+														$host = 'localhost';
+														$dbname = 'hotel_management';
+														$user = 'postgres';
+														$password = 'admin';
+		
+														$dsn = "pgsql:host=$host;dbname=$dbname";
+														$dbh = new PDO($dsn, $user, $password);
+		
+														$tableName = 'tblroom';
+														$no_of_records_per_page = 3;
 														$offset = ($pageno - 1) * $no_of_records_per_page;
 
-														$ret = "SELECT ID FROM tblroom";
+														$ret = "SELECT id FROM $tableName";
 														$query1 = $dbh->prepare($ret);
 														$query1->execute();
 														$results1 = $query1->fetchAll(PDO::FETCH_OBJ);
 														$total_rows = $query1->rowCount();
 														$total_pages = ceil($total_rows / $no_of_records_per_page);
-														$sql = "SELECT * FROM tblroom LIMIT $offset, $no_of_records_per_page";
+
+														$sql = "SELECT * FROM $tableName
+                                                        OFFSET $offset LIMIT $no_of_records_per_page";
 														$query = $dbh->prepare($sql);
 														$query->execute();
 														$results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -163,14 +174,14 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 															foreach ($results as $row) {               ?>
 																<tr>
 																	<td><?php echo htmlentities($cnt); ?></td>
-																	<td><?php echo htmlentities($row->RoomName); ?></td>
-																	<td width="400"><?php echo htmlentities($row->RoomDesc); ?></td>
-																	<td><img src="images/<?php echo $row->Image; ?>" width="100" height="100"></td>
+																	<td><?php echo htmlentities($row->roomname); ?></td>
+																	<td width="400"><?php echo htmlentities($row->roomdesc); ?></td>
+																	<td><img src="images/<?php echo $row->image; ?>" width="100" height="100"></td>
 																	<td class="d-none d-sm-table-cell">
-																		<span class="badge badge-primary"><?php echo htmlentities($row->CreationDate); ?></span>
+																		<span class="badge badge-primary"><?php echo htmlentities($row->creationdate); ?></span>
 																	</td>
-																	<td><a href="edit-room.php?editid=<?php echo ($row->ID); ?>" class="btn btn-info btn-sm">Edit</a>
-																		<a href="manage-room.php?delid=<?php echo ($row->ID); ?>" onclick="return confirm('Do you really want to Delete ?');" class="btn btn-danger btn-sm">Delete</a>
+																	<td><a href="edit-room.php?editid=<?php echo ($row->id); ?>" class="btn btn-info btn-sm">Edit</a>
+																		<a href="manage-room.php?delid=<?php echo ($row->id); ?>" onclick="return confirm('Do you really want to Delete ?');" class="btn btn-danger btn-sm">Delete</a>
 																	</td>
 
 																</tr>

@@ -80,14 +80,15 @@ if (strlen($_SESSION['hbmsaid']==0)) {
                                                             // Formula for pagination
                                                             $no_of_records_per_page = 10;
                                                             $offset = ($pageno-1) * $no_of_records_per_page;
-                                                            $ret = "SELECT ID FROM tbluser";
+                                                            $ret = "SELECT id FROM tbluser";
                                                             $query1 = $dbh -> prepare($ret);
                                                             $query1->execute();
                                                             $results1=$query1->fetchAll(PDO::FETCH_OBJ);
                                                             $total_rows=$query1->rowCount();
                                                             $total_pages = ceil($total_rows / $no_of_records_per_page);
 
-                                                            $sql="SELECT * FROM tbluser LIMIT $offset, $no_of_records_per_page";
+                                                            $sql="SELECT * FROM tbluser 
+                                                            OFFSET $offset LIMIT $no_of_records_per_page";
                                                             $query = $dbh -> prepare($sql);
                                                             $query->execute();
                                                             $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -99,11 +100,11 @@ if (strlen($_SESSION['hbmsaid']==0)) {
 
                                                         <tr>
                                                             <td><?php echo htmlentities($cnt);?></td>
-                                                            <td><?php  echo htmlentities($row->FullName);?></td>
-                                                            <td><?php  echo htmlentities($row->MobileNumber);?></td>
-                                                            <td><?php  echo htmlentities($row->Email);?></td>
-                                                            <td><span class="badge badge-primary"><?php  echo htmlentities($row->RegDate);?></span></td>
-                                                            <td><a href="user-bookings.php?uid=<?php  echo htmlentities($row->ID);?>&&uname=<?php  echo htmlentities($row->FullName);?>" class="btn btn-primary">View Bookings</a></td>
+                                                            <td><?php  echo htmlentities($row->fullname);?></td>
+                                                            <td><?php  echo htmlentities($row->mobilenumber);?></td>
+                                                            <td><?php  echo htmlentities($row->email);?></td>
+                                                            <td><span class="badge badge-primary"><?php  echo htmlentities($row->regdate);?></span></td>
+                                                            <td><a href="user-bookings.php?uid=<?php  echo htmlentities($row->id);?>&&uname=<?php  echo htmlentities($row->fullname);?>" class="btn btn-primary">View Bookings</a></td>
                                                         </tr>
 
                                                         <?php $cnt=$cnt+1;}} ?> 

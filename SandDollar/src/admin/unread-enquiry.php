@@ -11,7 +11,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
     <html>
 
     <head>
-        <title>Sand Dollar Hotel Admin | Unread Enquiry</title>
+        <title>Sand Dollar Hotel Admin | Read Enquiry</title>
 
         <script type="application/x-javascript">
             addEventListener("load", function() {
@@ -57,13 +57,13 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
                             <!-- start content -->
                             <div class="grids">
                                 <div class="progressbar-heading grids-heading">
-                                    <h2>Unread Enquiry</h2>
+                                    <h2>Read Enquiry</h2>
                                 </div>
                                 <div class="panel panel-widget forms-panel">
                                     <div class="forms">
                                         <div class="form-grids widget-shadow" data-example-id="basic-forms">
                                             <div class="form-title">
-                                                <h4>Unread Enquiry</h4>
+                                                <h4>Read Enquiry</h4>
                                             </div>
                                             <div class="form-body">
 
@@ -95,7 +95,11 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
                                                         $total_rows = $query1->rowCount();
                                                         $total_pages = ceil($total_rows / $no_of_records_per_page);
 
-                                                        $sql = "SELECT * FROM tblcontact WHERE isread IS NULL LIMIT $offset, $no_of_records_per_page";
+                                                        $sql = "SELECT tbluser.*, tblcontact.* 
+                                                        FROM tblcontact
+                                                        JOIN tbluser ON tblcontact.userid = tbluser.id 
+                                                        WHERE tblcontact.isread = 0
+                                                        OFFSET $offset LIMIT $no_of_records_per_page";
                                                         $query = $dbh->prepare($sql);
                                                         $query->execute();
                                                         $results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -105,17 +109,26 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
                                                             foreach ($results as $row) {               ?>
                                                                 <tr>
                                                                     <td><?php echo htmlentities($cnt); ?></td>
-                                                                    <td><?php echo htmlentities($row->Name); ?></td>
-                                                                    <td><?php echo htmlentities($row->Email); ?></td>
-                                                                    <td><?php echo htmlentities($row->MobileNumber); ?></td>
-
+                                                                    <td><?php echo htmlentities($row->fullname); ?></td>
+                                                                    <td><?php echo htmlentities($row->email); ?></td>
+                                                                    <td><?php echo htmlentities($row->mobilenumber); ?></td>
                                                                     <td>
-                                                                        <span class="badge badge-primary"><?php echo htmlentities($row->EnquiryDate); ?></span>
+                                                                        <span class="badge badge-primary"><?php echo htmlentities($row->enquirydate); ?></span>
                                                                     </td>
-                                                                    <td><a href="view-enquiry.php?viewid=<?php echo htmlentities($row->ID); ?>" class="btn btn-info btn-sm">View Details</a></td>
+                                                                    <td><a href="view-enquiry.php?viewid=<?php echo htmlentities($row->id); ?>" class="btn btn-info btn-sm">View Details</a></td>
                                                                 </tr>
                                                         <?php $cnt = $cnt + 1;
                                                             }
+                                                        } else {
+                                                            ?>
+                                                            <table class="table table-bordered table-striped table-vcenter js-dataTable-full-pagination">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td colspan="5" style="color:red; font-size:22px; text-align:center">No enquiries found</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <?php
                                                         } ?>
 
 

@@ -8,7 +8,7 @@
 		// Code for deleting product from cart
 		if(isset($_GET['delid'])) {
 			$rid=intval($_GET['delid']);
-			$sql="delete from tblfacility where ID=:rid";
+			$sql="DELETE FROM tblfacility WHERE id=:rid";
 			$query=$dbh->prepare($sql);
 			$query->bindParam(':rid',$rid,PDO::PARAM_STR);
 			$query->execute();
@@ -122,18 +122,30 @@
 															}
 
 															// Formula for pagination
+															$host = 'localhost';
+															$dbname = 'hotel_management';
+															$user = 'postgres';
+															$password = 'admin';
+			
+															$dsn = "pgsql:host=$host;dbname=$dbname";
+															$dbh = new PDO($dsn, $user, $password);
+			
+															$tableName = 'tblfacility';
 															$no_of_records_per_page = 10;
-															$offset = ($pageno-1) * $no_of_records_per_page;
-															$ret = "SELECT ID FROM tblfacility";
+															$offset = ($pageno - 1) * $no_of_records_per_page;
+
+
+															$ret = "SELECT id FROM $tableName";
 															$query1 = $dbh -> prepare($ret);
 															$query1->execute();
 															$results1=$query1->fetchAll(PDO::FETCH_OBJ);
 															$total_rows=$query1->rowCount();
-															$total_pages = ceil($total_rows / $no_of_records_per_page);
-															$sql="SELECT * from tblfacility LIMIT $offset, $no_of_records_per_page";
-															$query = $dbh -> prepare($sql);
+
+															$sql = "SELECT * FROM $tableName
+															OFFSET $offset LIMIT $no_of_records_per_page";
+															$query = $dbh->prepare($sql);
 															$query->execute();
-															$results=$query->fetchAll(PDO::FETCH_OBJ);
+															$results = $query->fetchAll(PDO::FETCH_OBJ);
 
 															$cnt=1;
 															if($query->rowCount() > 0) {
@@ -142,11 +154,11 @@
 
 														<tr>
 															<td class="text-center"><?php echo htmlentities($cnt);?></td>
-															<td class="font-w600"><?php  echo htmlentities($row->FacilityTitle);?></td>
-															<td><?php  echo htmlentities($row->Description);?></td>
-															<td><img src="images/<?php echo $row->Image;?>" width="100" height="100"></td>
-															<td><span class="badge badge-primary"><?php  echo htmlentities($row->CreationDate);?></span></td>
-															<td class="d-none d-sm-table-cell"><a href="manage-facility.php?delid=<?php echo ($row->ID);?>" onclick="return confirm('Do you really want to Delete ?');" class="btn btn-danger btn-sm">Delete</a></td>
+															<td class="font-w600"><?php  echo htmlentities($row->facilitytitle);?></td>
+															<td><?php  echo htmlentities($row->description);?></td>
+															<td><img src="images/<?php echo $row->image;?>" width="100" height="100"></td>
+															<td><span class="badge badge-primary"><?php  echo htmlentities($row->creationdate);?></span></td>
+															<td class="d-none d-sm-table-cell"><a href="manage-facility.php?delid=<?php echo ($row->id);?>" onclick="return confirm('Do you really want to Delete ?');" class="btn btn-danger btn-sm">Delete</a></td>
 														</tr>
 
 														<?php $cnt=$cnt+1;}} ?> 

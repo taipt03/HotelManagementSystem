@@ -10,7 +10,7 @@
 		$AName=$_POST['adminname'];
 		$mobno=$_POST['mobilenumber'];
 		$email=$_POST['email'];
-		$sql="UPDATE tbladmin SET adminname=:adminname,mobilenumber=:mobilenumber,email=:email WHERE ID=:aid";
+		$sql="UPDATE tbladmin SET adminname=:adminname,mobilenumber=:mobilenumber,email=:email WHERE id=:aid";
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':adminname',$AName,PDO::PARAM_STR);
 		$query->bindParam(':email',$email,PDO::PARAM_STR);
@@ -81,11 +81,11 @@
 												?>
 
 												<form method="post">
-													<div class="form-group"> <label for="exampleInputEmail1">Admin Name</label> <input type="text" class="form-control"  name="adminname" value="<?php  echo $row->AdminName;?>" required='true'> </div> 
-													<div class="form-group"> <label for="exampleInputEmail1">User Name</label> <input type="text" class="form-control" name="username" value="<?php  echo $row->UserName;?>" readonly="true"> </div>
-													<div class="form-group"> <label for="exampleInputEmail1">Email</label> <input type="email" class="form-control" name="email" value="<?php  echo $row->Email;?>" required='true'> </div>
-													<div class="form-group"> <label for="exampleInputEmail1">Contact Number</label> <input type="text" class="form-control" name="mobilenumber" value="<?php  echo $row->MobileNumber;?>" required='true' maxlength='10'> </div>
-													<div class="form-group"> <label for="exampleInputEmail1">Admin Registration Date</label> <input type="text" class="form-control" id="email2" name="" value="<?php  echo $row->AdminRegdate;?>" readonly="true"> </div>
+													<div class="form-group"> <label for="exampleInputEmail1">Admin Name</label> <input type="text" class="form-control"  name="adminname" value="<?php  echo $row->adminname;?>" required='true'> </div> 
+													<div class="form-group"> <label for="exampleInputEmail1">User Name</label> <input type="text" class="form-control" name="username" value="<?php  echo $row->username;?>" readonly="true"> </div>
+													<div class="form-group"> <label for="exampleInputEmail1">Email</label> <input type="email" class="form-control" name="email" value="<?php  echo $row->email;?>" required='true'> </div>
+													<div class="form-group"> <label for="exampleInputEmail1">Contact Number</label> <input type="text" class="form-control" name="mobilenumber" value="<?php  echo $row->mobilenumber;?>" required='true' maxlength='10'> </div>
+													<div class="form-group"> <label for="exampleInputEmail1">Admin Registration Date</label> <input type="text" class="form-control" id="email2" name="" value="<?php  echo $row->adminregdate;?>" readonly="true"> </div>
 													<?php $cnt=$cnt+1;}} ?>
 													<button type="submit" class="btn btn-default" name="submit">Submit</button> 
 												</form> 

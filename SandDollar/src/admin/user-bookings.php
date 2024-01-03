@@ -120,14 +120,18 @@
                                                             // Formula for pagination
                                                             $no_of_records_per_page = 10;
                                                             $offset = ($pageno-1) * $no_of_records_per_page;
-                                                            $ret = "SELECT ID FROM tblbooking where UserID='$uid'";
+                                                            $ret = "SELECT id FROM tblbooking where userid='$uid'";
                                                             $query1 = $dbh -> prepare($ret);
                                                             $query1->execute();
                                                             $results1=$query1->fetchAll(PDO::FETCH_OBJ);
                                                             $total_rows=$query1->rowCount();
                                                             $total_pages = ceil($total_rows / $no_of_records_per_page);
 
-                                                            $sql="SELECT tbluser.*,tblbooking.bookingnumber,tblbooking.ID,tblbooking.status,tblbooking.bookingdate FROM tblbooking JOIN tbluser ON tblbooking.userID=tbluser.ID WHERE userID='$uid' LIMIT $offset, $no_of_records_per_page";
+                                                            $sql="SELECT tbluser.*,tblbooking.bookingnumber,tblbooking.id,tblbooking.status,tblbooking.bookingdate 
+                                                            FROM tblbooking 
+                                                            JOIN tbluser ON tblbooking.userid=tbluser.id 
+                                                            WHERE userid='$uid' 
+                                                            OFFSET $offset LIMIT $no_of_records_per_page";
                                                             $query = $dbh -> prepare($sql);
                                                             $query->execute();
                                                             $results=$query->fetchAll(PDO::FETCH_OBJ);
@@ -139,24 +143,24 @@
 
                                                         <tr>
                                                             <td class="text-center"><?php echo htmlentities($cnt);?></td>
-                                                            <td><?php  echo htmlentities($row->BookingNumber);?></td>
-                                                            <td><?php  echo htmlentities($row->FullName);?></td>
-                                                            <td><?php  echo htmlentities($row->Email);?></td>
-                                                            <td><?php  echo htmlentities($row->MobileNumber);?></td>
-                                                            <td><span class="badge badge-primary"><?php  echo htmlentities($row->BookingDate);?></span></td>
+                                                            <td><?php  echo htmlentities($row->bookingnumber);?></td>
+                                                            <td><?php  echo htmlentities($row->fullname);?></td>
+                                                            <td><?php  echo htmlentities($row->email);?></td>
+                                                            <td><?php  echo htmlentities($row->mobilenumber);?></td>
+                                                            <td><span class="badge badge-primary"><?php  echo htmlentities($row->bookingdate);?></span></td>
                                                             <td>
                                                                 <?php 
-                                                                    $status=$row->Status;
+                                                                    $status=$row->status;
                                                                     if($status==''):
                                                                 ?>
                                                                 <span class="badge badge-warning"><?php  echo htmlentities('Not Updated Yet');?></span>
                                                                 <?php elseif($status=='Cancelled'):?>
-                                                                <span class="badge badge-danger"><?php  echo htmlentities($row->Status);?></span>
+                                                                <span class="badge badge-danger"><?php  echo htmlentities($row->status);?></span>
                                                                 <?php elseif($status=='Approved'): ?>
-                                                                <span class="badge badge-success"><?php  echo htmlentities($row->Status);?></span>
+                                                                <span class="badge badge-success"><?php  echo htmlentities($row->status);?></span>
                                                                 <?php endif;?>
                                                             </td>
-                                                            <td class="d-none d-sm-table-cell"><a href="view-booking-detail.php?bookingid=<?php echo htmlentities ($row->BookingNumber);?>" class="btn btn-info btn-sm">View Details</a></td>
+                                                            <td class="d-none d-sm-table-cell"><a href="view-booking-detail.php?bookingid=<?php echo htmlentities ($row->bookingnumber);?>" class="btn btn-info btn-sm">View Details</a></td>
                                                         </tr>
 
                                                         <?php $cnt=$cnt+1;}} else { ?> 

@@ -8,7 +8,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 	// Code for deleting product from cart
 	if (isset($_GET['delid'])) {
 		$rid = intval($_GET['delid']);
-		$sql = "delete from tblcategory where ID=:rid";
+		$sql = "DELETE FROM tblcategory WHERE id=:rid";
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':rid', $rid, PDO::PARAM_STR);
 		$query->execute();
@@ -129,17 +129,27 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 															$pageno = 1;
 														}
 														// Formula for pagination
+														$host = 'localhost';
+														$dbname = 'hotel_management';
+														$user = 'postgres';
+														$password = 'admin';
+		
+														$dsn = "pgsql:host=$host;dbname=$dbname";
+														$dbh = new PDO($dsn, $user, $password);
+		
+														$tableName = 'tblcategory';
 														$no_of_records_per_page = 3;
 														$offset = ($pageno - 1) * $no_of_records_per_page;
-														$ret = "SELECT ID FROM tblcategory";
+
+														$ret = "SELECT id FROM tblcategory";
 														$query1 = $dbh->prepare($ret);
 														$query1->execute();
 														$results1 = $query1->fetchAll(PDO::FETCH_OBJ);
 														$total_rows = $query1->rowCount();
 
 
-														$total_pages = ceil($total_rows / $no_of_records_per_page);
-														$sql = "SELECT * from tblcategory LIMIT $offset, $no_of_records_per_page";
+														$sql = "SELECT * FROM $tableName
+                                                        OFFSET $offset LIMIT $no_of_records_per_page";
 														$query = $dbh->prepare($sql);
 														$query->execute();
 														$results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -149,10 +159,10 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 															foreach ($results as $row) {               ?>
 																<tr>
 																	<td class="text-center"><?php echo htmlentities($cnt); ?></td>
-																	<td class="font-w600"><?php echo htmlentities($row->CategoryName); ?></td>
-																	<td><?php echo htmlentities($row->Description); ?></td>
-																	<td><span class="badge badge-primary"><?php echo htmlentities($row->Date); ?></span></td>
-																	<td class="d-none d-sm-table-cell"><a href="manage-category.php?delid=<?php echo ($row->ID); ?>" onclick="return confirm('Do you really want to Delete ?');" class="btn btn-danger btn-sm">Delete</a></td>
+																	<td class="font-w600"><?php echo htmlentities($row->categoryname); ?></td>
+																	<td><?php echo htmlentities($row->description); ?></td>
+																	<td><span class="badge badge-primary"><?php echo htmlentities($row->date); ?></span></td>
+																	<td class="d-none d-sm-table-cell"><a href="manage-category.php?delid=<?php echo ($row->id); ?>" onclick="return confirm('Do you really want to Delete ?');" class="btn btn-danger btn-sm">Delete</a></td>
 																</tr>
 														<?php $cnt = $cnt + 1;
 															}

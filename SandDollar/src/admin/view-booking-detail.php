@@ -26,11 +26,12 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 		echo "<script>window.location.href ='new-booking.php'</script>";
 	}
 ?>
+
 	<!DOCTYPE HTML>
 	<html>
 
 	<head>
-		<title>Sand Dollar Hotel Admin | View Booking</title>
+		<title>Sand Dollar Hotel Admin | View Booking Details</title>
 
 		<script type="application/x-javascript">
 			addEventListener("load", function() {
@@ -111,27 +112,26 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 							<!-- start content -->
 							<div class="grids">
 								<div class="progressbar-heading grids-heading">
-									<h2>View Booking</h2>
+									<h2>View Booking Details</h2>
 								</div>
 								<div class="panel panel-widget forms-panel">
 									<div class="forms">
 										<div class="form-grids widget-shadow" data-example-id="basic-forms">
 											<div class="form-title">
-												<h4>View Booking</h4>
+												<h4>View Booking Details</h4>
 											</div>
 											<div class="form-body">
-												<?php
 
-												$bookid = $_GET['bookingid'];
+											<?php
+												$bookingid = $_GET['bookingid'];
 
-												$sql = "SELECT tblbooking.bookingnumber,tbluser.fullname,tbluser.mobilenumber,tbluser.email,tblbooking.IDtype,tblbooking.gender,tblbooking.address,tblbooking.checkindate,tblbooking.checkoutdate,tblbooking.bookingdate,tblbooking.remark,tblbooking.status,tblbooking.updationdate,tblcategory.categoryname,tblcategory.description,tblcategory.price,tblroom.roomname,tblroom.maxadult,tblroom.maxchild,tblroom.roomdesc,tblroom.noofbed,tblroom.image,tblroom.roomfacility 
-FROM tblbooking 
-JOIN tblroom ON tblbooking.roomID=tblroom.ID 
-JOIN tblcategory ON tblcategory.ID=tblroom.roomtype 
-JOIN tbluser ON tblbooking.userID=tbluser.ID  
-WHERE tblbooking.bookingnumber=:bookid";
+												$sql = "SELECT tblbooking.bookingnumber,tbluser.fullname,tbluser.mobilenumber,tbluser.email,tblbooking.paymentmethod,tbluser.gender,tbluser.address,tblbooking.checkindate,tblbooking.checkoutdate,tblbooking.bookingdate,tblbooking.remark,tblbooking.status,tblbooking.updationdate,tblcategory.categoryname,tblcategory.description,tblroom.price,tblroom.roomname,tblroom.maxadult,tblroom.maxchild,tblroom.roomdesc,tblroom.noofbed,tblroom.image,tblroom.roomfacility 
+												FROM tblbooking 
+												JOIN tblroom ON tblbooking.roomid=tblroom.id 
+												JOIN tblcategory ON tblcategory.id=tblroom.roomtype 
+												JOIN tbluser ON tblbooking.userid=tbluser.id  
+												WHERE tblbooking.bookingnumber='$bookingid'";
 												$query = $dbh->prepare($sql);
-												$query->bindParam(':bookid', $bookid, PDO::PARAM_STR);
 												$query->execute();
 												$results = $query->fetchAll(PDO::FETCH_OBJ);
 
@@ -140,38 +140,38 @@ WHERE tblbooking.bookingnumber=:bookid";
 													foreach ($results as $row) {               ?>
 														<table border="1" class="table table-bordered table-striped table-vcenter js-dataTable-full-pagination">
 															<tr>
-																<th colspan="4" style="color: red;font-weight: bold;text-align: center;font-size: 20px"> Booking Number: <?php echo $row->BookingNumber; ?></th>
+																<th colspan="4" style="color: red;font-weight: bold;text-align: center;font-size: 20px"> Booking Number: <?php echo $bookingid; ?></th>
 															</tr>
 															<tr>
 																<th colspan="4" style="color: blue;font-weight: bold;font-size: 15px"> Booking Detail:</th>
 															</tr>
 															<tr>
 																<th>Customer Name</th>
-																<td><?php echo $row->FullName; ?></td>
+																<td><?php echo $row->fullname; ?></td>
 																<th>Mobile Number</th>
-																<td><?php echo $row->MobileNumber; ?></td>
+																<td><?php echo $row->mobilenumber; ?></td>
 															</tr>
 
 
 															<tr>
 
 																<th>Email</th>
-																<td><?php echo $row->Email; ?></td>
-																<th>ID Type</th>
-																<td><?php echo $row->IDType; ?></td>
+																<td><?php echo $row->email; ?></td>
+																<th>Payment Method</th>
+																<td><?php echo $row->paymentmethod; ?></td>
 															</tr>
 															<tr>
 
 																<th>Gender</th>
-																<td><?php echo $row->Gender; ?></td>
+																<td><?php echo $row->gender; ?></td>
 																<th>Address</th>
-																<td><?php echo $row->Address; ?></td>
+																<td><?php echo $row->address; ?></td>
 															</tr>
 															<tr>
 																<th>Check in Date</th>
-																<td><?php echo $row->CheckinDate; ?></td>
+																<td><?php echo $row->checkindate; ?></td>
 																<th>Check out Date</th>
-																<td><?php echo $row->CheckoutDate; ?></td>
+																<td><?php echo $row->checkoutdate; ?></td>
 															</tr>
 
 															<tr>
@@ -179,38 +179,38 @@ WHERE tblbooking.bookingnumber=:bookid";
 																<th colspan="4" style="color: blue;font-weight: bold;font-size: 15px"> Room Detail:</th>
 															</tr>
 															<th>Room Type</th>
-															<td><?php echo $row->CategoryName; ?></td>
+															<td><?php echo $row->categoryname; ?></td>
 															<th>Room Price(perday)</th>
-															<td>$<?php echo $row->Price; ?></td>
+															<td>$<?php echo $row->price; ?></td>
 															</tr>
 
 															<tr>
 
 																<th>Room Name</th>
-																<td><?php echo $row->RoomName; ?></td>
+																<td><?php echo $row->roomname; ?></td>
 																<th>Room Description</th>
-																<td><?php echo $row->RoomDesc; ?></td>
+																<td><?php echo $row->roomdesc; ?></td>
 															</tr>
 															<tr>
 
 																<th>Max Adult</th>
-																<td><?php echo $row->MaxAdult; ?></td>
+																<td><?php echo $row->maxadult; ?></td>
 																<th>Max Child</th>
-																<td><?php echo $row->MaxChild; ?></td>
+																<td><?php echo $row->maxchild; ?></td>
 															</tr>
 															<tr>
 
 																<th>No.of Bed</th>
-																<td><?php echo $row->NoofBed; ?></td>
+																<td><?php echo $row->noofbed; ?></td>
 																<th>Room Image</th>
-																<td><img src="images/<?php echo $row->Image; ?>" width="100" height="100" value="<?php echo $row->Image; ?>"></td>
+																<td><img src="images/<?php echo $row->image; ?>" width="100" height="100" value="<?php echo $row->image; ?>"></td>
 															</tr>
 															<tr>
 
 																<th>Room Facility</th>
-																<td><?php echo $row->RoomFacility; ?></td>
+																<td><?php echo $row->roomfacility; ?></td>
 																<th>Booking Date</th>
-																<td><?php echo $row->BookingDate; ?></td>
+																<td><?php echo $row->bookingdate; ?></td>
 															</tr>
 															<tr>
 																<th colspan="4" style="color: blue;font-weight: bold;font-size: 15px"> Admin Remarks:</th>
@@ -219,344 +219,299 @@ WHERE tblbooking.bookingnumber=:bookid";
 
 																<th>Order Final Status</th>
 
-																<td> <?php $status = $row->Status;
+																<td> <?php $status = $row->status;
 
-																		if ($row->Status == "Approved") {
+																		if ($row->status == "Approved") {
 																			echo "Your Booking has been approved";
 																		}
 
-																		if ($row->Status == "Cancelled") {
+																		if ($row->status == "Cancelled") {
 																			echo "Your Booking has been cancelled";
 																		}
 
 
-																		if ($row->Status == "") {
+																		if ($row->status == "") {
 																			echo "Not Response Yet";
 																		}; ?></td>
 																<th>Admin Remark</th>
-																<?php if ($row->Status == "") { ?>
+																<?php if ($row->status == "") { ?>
 
 																	<td><?php echo "Not Updated Yet"; ?></td>
-																<?php } else { ?> <td><?php echo htmlentities($row->Remark); ?>
+																<?php } else { ?> <td><?php echo htmlentities($row->remark); ?>
 																	</td>
 																<?php } ?>
 															</tr>
 
-
+														
 													<?php $cnt = $cnt + 1;
+													ini_set('display_errors', 1);
+													error_reporting(E_ALL);
 													}
 												} ?>
-
 														</table>
-														<?php
-
-														if ($status == "") {
-														?>
-															<p align="center" style="padding-top: 20px">
-																<button class="btn btn-primary waves-effect waves-light w-lg" data-toggle="modal" data-target="#myModal">Take Action</button>
-															</p>
-
-														<?php } ?>
-														<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-															<div class="modal-dialog" role="document">
-																<div class="modal-content">
-																	<div class="modal-header">
-																		<h5 class="modal-title" id="exampleModalLabel">Take Action</h5>
-																		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-																			<span aria-hidden="true">&times;</span>
-																		</button>
-																	</div>
-																	<div class="modal-body">
-																		<table class="table table-bordered table-hover data-tables">
-																			<form method="post" name="submit">
-
-
-
-																				<tr>
-																					<th>Remark :</th>
-																					<td>
-																						<textarea name="remark" placeholder="Remark" rows="12" cols="14" class="form-control wd-450" required="true"></textarea>
-																					</td>
-																				</tr>
-
-
-																				<tr>
-																					<th>Status :</th>
-																					<td>
-
-																						<select name="status" class="form-control wd-450" required="true">
-																							<option value="Approved" selected="true">Approved</option>
-																							<option value="Cancelled">Cancelled</option>
-																						</select>
-																					</td>
-																				</tr>
-																		</table>
-																	</div>
-																	<div class="modal-footer">
-																		<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-																		<button type="submit" name="submit" class="btn btn-primary">Update</button>
-
-																		</form>
-
-																	</div>
-																</div>
-															</div>
-														</div>
-
+														<p>
+															<a href="javascript:history.go(-1)" title="Return to the previous page">&laquo; Go back</a>
+														</p>
 
 											</div>
-
-											<!-- end content -->
-
-											<?php include_once('includes/footer.php'); ?>
 										</div>
-
 									</div>
-									<!--content-->
 								</div>
+
+
 							</div>
-							<!--//content-inner-->
-							<!--/sidebar-menu-->
-							<?php include_once('includes/sidebar.php'); ?>
-							<div class="clearfix"></div>
+
+							<!-- end content -->
+
+							<?php include_once('includes/footer.php'); ?>
 						</div>
-						<script>
-							var toggle = true;
 
-							$(".sidebar-icon").click(function() {
-								if (toggle) {
-									$(".page-container").addClass("sidebar-collapsed").removeClass("sidebar-collapsed-back");
-									$("#menu span").css({
-										"position": "absolute"
-									});
-								} else {
-									$(".page-container").removeClass("sidebar-collapsed").addClass("sidebar-collapsed-back");
-									setTimeout(function() {
-										$("#menu span").css({
-											"position": "relative"
-										});
-									}, 400);
-								}
+					</div>
+					<!--content-->
+				</div>
+			</div>
+			<!--//content-inner-->
+			<!--/sidebar-menu-->
+			<?php include_once('includes/sidebar.php'); ?>
+			<div class="clearfix"></div>
+		</div>
+		<script>
+			var toggle = true;
 
-								toggle = !toggle;
-							});
-						</script>
-						<!--js -->
-						<script src="js/jquery.nicescroll.js"></script>
-						<script src="js/scripts.js"></script>
-						<!-- Bootstrap Core JavaScript -->
-						<script src="js/bootstrap.min.js"></script>
-						<!-- /Bootstrap Core JavaScript -->
-						<!-- real-time -->
-						<script language="javascript" type="text/javascript" src="js/jquery.flot.js"></script>
-						<script type="text/javascript">
-							$(function() {
+			$(".sidebar-icon").click(function() {
+				if (toggle) {
+					$(".page-container").addClass("sidebar-collapsed").removeClass("sidebar-collapsed-back");
+					$("#menu span").css({
+						"position": "absolute"
+					});
+				} else {
+					$(".page-container").removeClass("sidebar-collapsed").addClass("sidebar-collapsed-back");
+					setTimeout(function() {
+						$("#menu span").css({
+							"position": "relative"
+						});
+					}, 400);
+				}
 
-								// We use an inline data source in the example, usually data would
-								// be fetched from a server
+				toggle = !toggle;
+			});
+		</script>
+		<!--js -->
+		<script src="js/jquery.nicescroll.js"></script>
+		<script src="js/scripts.js"></script>
+		<!-- Bootstrap Core JavaScript -->
+		<script src="js/bootstrap.min.js"></script>
+		<!-- /Bootstrap Core JavaScript -->
+		<!-- real-time -->
+		<script language="javascript" type="text/javascript" src="js/jquery.flot.js"></script>
+		<script type="text/javascript">
+			$(function() {
 
-								var data = [],
-									totalPoints = 300;
+				// We use an inline data source in the example, usually data would
+				// be fetched from a server
 
-								function getRandomData() {
+				var data = [],
+					totalPoints = 300;
 
-									if (data.length > 0)
-										data = data.slice(1);
+				function getRandomData() {
 
-									// Do a random walk
+					if (data.length > 0)
+						data = data.slice(1);
 
-									while (data.length < totalPoints) {
+					// Do a random walk
 
-										var prev = data.length > 0 ? data[data.length - 1] : 50,
-											y = prev + Math.random() * 10 - 5;
+					while (data.length < totalPoints) {
 
-										if (y < 0) {
-											y = 0;
-										} else if (y > 100) {
-											y = 100;
-										}
+						var prev = data.length > 0 ? data[data.length - 1] : 50,
+							y = prev + Math.random() * 10 - 5;
 
-										data.push(y);
-									}
+						if (y < 0) {
+							y = 0;
+						} else if (y > 100) {
+							y = 100;
+						}
 
-									// Zip the generated y values with the x values
+						data.push(y);
+					}
 
-									var res = [];
-									for (var i = 0; i < data.length; ++i) {
-										res.push([i, data[i]])
-									}
+					// Zip the generated y values with the x values
 
-									return res;
-								}
+					var res = [];
+					for (var i = 0; i < data.length; ++i) {
+						res.push([i, data[i]])
+					}
 
-								// Set up the control widget
+					return res;
+				}
 
-								var updateInterval = 30;
-								$("#updateInterval").val(updateInterval).change(function() {
-									var v = $(this).val();
-									if (v && !isNaN(+v)) {
-										updateInterval = +v;
-										if (updateInterval < 1) {
-											updateInterval = 1;
-										} else if (updateInterval > 2000) {
-											updateInterval = 2000;
-										}
-										$(this).val("" + updateInterval);
-									}
-								});
+				// Set up the control widget
 
-								var plot = $.plot("#placeholder", [getRandomData()], {
-									series: {
-										shadowSize: 0 // Drawing is faster without shadows
-									},
-									yaxis: {
-										min: 0,
-										max: 100
-									},
-									xaxis: {
-										show: false
-									}
-								});
+				var updateInterval = 30;
+				$("#updateInterval").val(updateInterval).change(function() {
+					var v = $(this).val();
+					if (v && !isNaN(+v)) {
+						updateInterval = +v;
+						if (updateInterval < 1) {
+							updateInterval = 1;
+						} else if (updateInterval > 2000) {
+							updateInterval = 2000;
+						}
+						$(this).val("" + updateInterval);
+					}
+				});
 
-								function update() {
+				var plot = $.plot("#placeholder", [getRandomData()], {
+					series: {
+						shadowSize: 0 // Drawing is faster without shadows
+					},
+					yaxis: {
+						min: 0,
+						max: 100
+					},
+					xaxis: {
+						show: false
+					}
+				});
 
-									plot.setData([getRandomData()]);
+				function update() {
 
-									// Since the axes don't change, we don't need to call plot.setupGrid()
+					plot.setData([getRandomData()]);
 
-									plot.draw();
-									setTimeout(update, updateInterval);
-								}
+					// Since the axes don't change, we don't need to call plot.setupGrid()
 
-								update();
+					plot.draw();
+					setTimeout(update, updateInterval);
+				}
 
-								// Add the Flot version string to the footer
+				update();
 
-								$("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
-							});
-						</script>
-						<!-- /real-time -->
-						<script src="js/jquery.fn.gantt.js"></script>
-						<script>
-							$(function() {
+				// Add the Flot version string to the footer
 
-								"use strict";
+				$("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
+			});
+		</script>
+		<!-- /real-time -->
+		<script src="js/jquery.fn.gantt.js"></script>
+		<script>
+			$(function() {
 
-								$(".gantt").gantt({
-									source: [{
-										name: "Sprint 0",
-										desc: "Analysis",
-										values: [{
-											from: "/Date(1320192000000)/",
-											to: "/Date(1322401600000)/",
-											label: "Requirement Gathering",
-											customClass: "ganttRed"
-										}]
-									}, {
-										name: " ",
-										desc: "Scoping",
-										values: [{
-											from: "/Date(1322611200000)/",
-											to: "/Date(1323302400000)/",
-											label: "Scoping",
-											customClass: "ganttRed"
-										}]
-									}, {
-										name: "Sprint 1",
-										desc: "Development",
-										values: [{
-											from: "/Date(1323802400000)/",
-											to: "/Date(1325685200000)/",
-											label: "Development",
-											customClass: "ganttGreen"
-										}]
-									}, {
-										name: " ",
-										desc: "Showcasing",
-										values: [{
-											from: "/Date(1325685200000)/",
-											to: "/Date(1325695200000)/",
-											label: "Showcasing",
-											customClass: "ganttBlue"
-										}]
-									}, {
-										name: "Sprint 2",
-										desc: "Development",
-										values: [{
-											from: "/Date(1326785200000)/",
-											to: "/Date(1325785200000)/",
-											label: "Development",
-											customClass: "ganttGreen"
-										}]
-									}, {
-										name: " ",
-										desc: "Showcasing",
-										values: [{
-											from: "/Date(1328785200000)/",
-											to: "/Date(1328905200000)/",
-											label: "Showcasing",
-											customClass: "ganttBlue"
-										}]
-									}, {
-										name: "Release Stage",
-										desc: "Training",
-										values: [{
-											from: "/Date(1330011200000)/",
-											to: "/Date(1336611200000)/",
-											label: "Training",
-											customClass: "ganttOrange"
-										}]
-									}, {
-										name: " ",
-										desc: "Deployment",
-										values: [{
-											from: "/Date(1336611200000)/",
-											to: "/Date(1338711200000)/",
-											label: "Deployment",
-											customClass: "ganttOrange"
-										}]
-									}, {
-										name: " ",
-										desc: "Warranty Period",
-										values: [{
-											from: "/Date(1336611200000)/",
-											to: "/Date(1349711200000)/",
-											label: "Warranty Period",
-											customClass: "ganttOrange"
-										}]
-									}],
-									navigate: "scroll",
-									scale: "weeks",
-									maxScale: "months",
-									minScale: "days",
-									itemsPerPage: 10,
-									onItemClick: function(data) {
-										alert("Item clicked - show some details");
-									},
-									onAddClick: function(dt, rowId) {
-										alert("Empty space clicked - add an item!");
-									},
-									onRender: function() {
-										if (window.console && typeof console.log === "function") {
-											console.log("chart rendered");
-										}
-									}
-								});
+				"use strict";
 
-								$(".gantt").popover({
-									selector: ".bar",
-									title: "I'm a popover",
-									content: "And I'm the content of said popover.",
-									trigger: "hover"
-								});
+				$(".gantt").gantt({
+					source: [{
+						name: "Sprint 0",
+						desc: "Analysis",
+						values: [{
+							from: "/Date(1320192000000)/",
+							to: "/Date(1322401600000)/",
+							label: "Requirement Gathering",
+							customClass: "ganttRed"
+						}]
+					}, {
+						name: " ",
+						desc: "Scoping",
+						values: [{
+							from: "/Date(1322611200000)/",
+							to: "/Date(1323302400000)/",
+							label: "Scoping",
+							customClass: "ganttRed"
+						}]
+					}, {
+						name: "Sprint 1",
+						desc: "Development",
+						values: [{
+							from: "/Date(1323802400000)/",
+							to: "/Date(1325685200000)/",
+							label: "Development",
+							customClass: "ganttGreen"
+						}]
+					}, {
+						name: " ",
+						desc: "Showcasing",
+						values: [{
+							from: "/Date(1325685200000)/",
+							to: "/Date(1325695200000)/",
+							label: "Showcasing",
+							customClass: "ganttBlue"
+						}]
+					}, {
+						name: "Sprint 2",
+						desc: "Development",
+						values: [{
+							from: "/Date(1326785200000)/",
+							to: "/Date(1325785200000)/",
+							label: "Development",
+							customClass: "ganttGreen"
+						}]
+					}, {
+						name: " ",
+						desc: "Showcasing",
+						values: [{
+							from: "/Date(1328785200000)/",
+							to: "/Date(1328905200000)/",
+							label: "Showcasing",
+							customClass: "ganttBlue"
+						}]
+					}, {
+						name: "Release Stage",
+						desc: "Training",
+						values: [{
+							from: "/Date(1330011200000)/",
+							to: "/Date(1336611200000)/",
+							label: "Training",
+							customClass: "ganttOrange"
+						}]
+					}, {
+						name: " ",
+						desc: "Deployment",
+						values: [{
+							from: "/Date(1336611200000)/",
+							to: "/Date(1338711200000)/",
+							label: "Deployment",
+							customClass: "ganttOrange"
+						}]
+					}, {
+						name: " ",
+						desc: "Warranty Period",
+						values: [{
+							from: "/Date(1336611200000)/",
+							to: "/Date(1349711200000)/",
+							label: "Warranty Period",
+							customClass: "ganttOrange"
+						}]
+					}],
+					navigate: "scroll",
+					scale: "weeks",
+					maxScale: "months",
+					minScale: "days",
+					itemsPerPage: 10,
+					onItemClick: function(data) {
+						alert("Item clicked - show some details");
+					},
+					onAddClick: function(dt, rowId) {
+						alert("Empty space clicked - add an item!");
+					},
+					onRender: function() {
+						if (window.console && typeof console.log === "function") {
+							console.log("chart rendered");
+						}
+					}
+				});
 
-								prettyPrint();
+				$(".gantt").popover({
+					selector: ".bar",
+					title: "I'm a popover",
+					content: "And I'm the content of said popover.",
+					trigger: "hover"
+				});
 
-							});
-						</script>
-						<script src="js/menu_jquery.js"></script>
+				prettyPrint();
 
-						<script src="js/pages/be_tables_datatables.js"></script>
+			});
+		</script>
+		<script src="js/menu_jquery.js"></script>
+
+		<script src="js/pages/be_tables_datatables.js"></script>
 	</body>
 
 	</html><?php }  ?>
