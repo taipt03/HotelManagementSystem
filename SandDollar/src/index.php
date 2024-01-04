@@ -84,7 +84,13 @@ if (isset($_SESSION['login_time'])) {
 				<h3>Services</h3>
 				<div class="features-grids">
 					<?php
-					$sql = "SELECT * FROM tblfacility ORDER BY rand() LIMIT 4";
+					$host = 'localhost';
+					$dbname = 'hotel_management';
+					$user = 'postgres';
+					$password = 'admin';
+					$dsn = "pgsql:host=$host;dbname=$dbname";
+					$dbh = new PDO($dsn, $user, $password);
+					$sql = "SELECT * from tblfacility order by rand() limit 4";
 					$query = $dbh->prepare($sql);
 					$query->execute();
 					$results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -97,10 +103,10 @@ if (isset($_SESSION['login_time'])) {
 
 									<div class="feature1">
 										<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-										<h4><?php echo htmlentities($row->FacilityTitle); ?></h4>
+										<h4><?php echo htmlentities($row->facilitytitle); ?></h4>
 									</div>
 									<div class="feature2">
-										<p><?php echo htmlentities($row->Description); ?>. </p>
+										<p><?php echo htmlentities($row->description); ?>. </p>
 									</div>
 								</div>
 							</div>

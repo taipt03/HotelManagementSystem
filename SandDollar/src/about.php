@@ -65,7 +65,13 @@ if (isset($_SESSION['login_time'])) {
 		<div class="about-section">
 			<div class="container">
 				<?php
-				$sql = "SELECT * from tblpage where PageType='aboutus'";
+                $host = 'localhost';
+                $dbname = 'hotel_management';
+                $user = 'postgres';
+                $password = 'admin';
+                $dsn = "pgsql:host=$host;dbname=$dbname";
+                $dbh = new PDO($dsn, $user, $password);
+				$sql = "SELECT * from tblpage where pagetype='aboutus'";
 				$query = $dbh->prepare($sql);
 				$query->execute();
 				$results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -74,10 +80,10 @@ if (isset($_SESSION['login_time'])) {
 				if ($query->rowCount() > 0) {
 					foreach ($results as $row) {
 				?>
-						<h2><?php echo htmlentities($row->PageTitle); ?></h2>
+						<h2><?php echo htmlentities($row->pagetitle); ?></h2>
 						<img src="images/p1.jpg" class="img-responsive" alt="/">
-						<h5><?php echo htmlentities($row->PageTitle); ?></h5>
-						<p><?php echo htmlentities($row->PageDescription); ?>.</p>
+						<h5><?php echo htmlentities($row->pagetitle); ?></h5>
+						<p><?php echo htmlentities($row->pagedescription); ?>.</p>
 				<?php $cnt = $cnt + 1;
 					}
 				} ?>

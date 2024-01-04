@@ -1,4 +1,10 @@
 <?php
+$host = 'localhost';
+$dbname = 'hotel_management';
+$user = 'postgres';
+$password = 'admin';
+$dsn = "pgsql:host=$host;dbname=$dbname";
+$dbh = new PDO($dsn, $user, $password);
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
@@ -6,7 +12,7 @@ include('includes/dbconnection.php');
 if (isset($_POST['login'])) {
 	$email = $_POST['email'];
 	$password = md5($_POST['password']);
-	$sql = "SELECT ID FROM tbluser WHERE email=:email and password=:password";
+	$sql = "SELECT ID FROM tbluser WHERE Email=:email and Password=:password";
 	$query = $dbh->prepare($sql);
 	$query->bindParam(':email', $email, PDO::PARAM_STR);
 	$query->bindParam(':password', $password, PDO::PARAM_STR);

@@ -2,19 +2,24 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
-
+$host = 'localhost';
+$dbname = 'hotel_management';
+$user = 'postgres';
+$password = 'admin';
+$dsn = "pgsql:host=$host;dbname=$dbname";
+$dbh = new PDO($dsn, $user, $password);
 if (isset($_POST['submit'])) {
 	$email = $_POST['email'];
 	$mobile = $_POST['mobile'];
 	$newpassword = md5($_POST['newpassword']);
-	$sql = "SELECT email FROM tbluser WHERE email=:email AND mobilenumber=:mobile";
+	$sql = "SELECT email FROM tbluser WHERE email=:email and mobilenumber=:mobile";
 	$query = $dbh->prepare($sql);
 	$query->bindParam(':email', $email, PDO::PARAM_STR);
 	$query->bindParam(':mobile', $mobile, PDO::PARAM_STR);
 	$query->execute();
 	$results = $query->fetchAll(PDO::FETCH_OBJ);
 	if ($query->rowCount() > 0) {
-		$con = "UPDATE tbluser SET password=:newpassword WHERE email=:email AND mobilenumber=:mobile";
+		$con = "update tbluser set Password=:newpassword where email=:email and mobilenumber=:mobile";
 		$chngpwd1 = $dbh->prepare($con);
 		$chngpwd1->bindParam(':email', $email, PDO::PARAM_STR);
 		$chngpwd1->bindParam(':mobile', $mobile, PDO::PARAM_STR);
@@ -43,7 +48,6 @@ if (isset($_POST['submit'])) {
 		function hideURLbar() {
 			window.scrollTo(0, 1);
 		}
-
 	</script>
 	<script src="js/jquery-1.11.1.min.js"></script>
 	<script src="js/bootstrap.js"></script>

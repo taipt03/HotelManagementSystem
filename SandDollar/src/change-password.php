@@ -3,6 +3,12 @@ session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
 error_reporting(0);
+$host = 'localhost';
+$dbname = 'hotel_management';
+$user = 'postgres';
+$password = 'admin';
+$dsn = "pgsql:host=$host;dbname=$dbname";
+$dbh = new PDO($dsn, $user, $password);
 if (strlen($_SESSION['hbmsuid'] == 0)) {
 	header('location:logout.php');
 } else {
@@ -25,7 +31,7 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 		$uid = $_SESSION['hbmsuid'];
 		$cpassword = md5($_POST['currentpassword']);
 		$newpassword = md5($_POST['newpassword']);
-		$sql = "SELECT ID FROM tbluser WHERE ID=:uid and Password=:cpassword";
+		$sql = "SELECT id FROM tbluser WHERE id=:uid and password=:cpassword";
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':uid', $uid, PDO::PARAM_STR);
 		$query->bindParam(':cpassword', $cpassword, PDO::PARAM_STR);
@@ -33,7 +39,7 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 		$results = $query->fetchAll(PDO::FETCH_OBJ);
 
 		if ($query->rowCount() > 0) {
-			$con = "update tbluser set Password=:newpassword where ID=:uid";
+			$con = "update tbluser set password=:newpassword where id=:uid";
 			$chngpwd1 = $dbh->prepare($con);
 			$chngpwd1->bindParam(':uid', $uid, PDO::PARAM_STR);
 			$chngpwd1->bindParam(':newpassword', $newpassword, PDO::PARAM_STR);
@@ -120,7 +126,7 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 							<br />
 
 							<br />
-							<input type="submit" value="Change" name="submit">
+							<input type="submit" value="change" name="submit">
 						</form>
 
 					</div>

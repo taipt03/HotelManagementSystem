@@ -1,7 +1,8 @@
 <?php
-include('includes/dbconnection.php');
 session_start();
 error_reporting(0);
+include('includes/dbconnection.php');
+
 if (isset($_SESSION['login_time'])) {
     $current_time = time();
     $session_lifetime = 24 * 60 * 60; // 24 hours
@@ -99,7 +100,7 @@ if (isset($_POST['submit'])) {
 						if ($query->rowCount() > 0) {
 							foreach ($results as $row) {
 						?>
-								<p><?php echo htmlentities($row->PageDescription); ?>.</p><?php $cnt = $cnt + 1;
+								<p><?php echo htmlentities($row->pagedescription); ?>.</p><?php $cnt = $cnt + 1;
 																						}
 																					} ?>
 						<?php
@@ -112,10 +113,10 @@ if (isset($_POST['submit'])) {
 							foreach ($results as $row) {
 						?>
 								<address>
-									<h4><?php echo htmlentities($row->PageTitle); ?></h4>
-									<p><?php echo htmlentities($row->PageDescription); ?></p>
-									<p>Telephone : +<?php echo htmlentities($row->MobileNumber); ?></p>
-									<p>E-mail : <?php echo htmlentities($row->Email); ?></p>
+									<h4><?php echo htmlentities($row->pagetitle); ?></h4>
+									<p><?php echo htmlentities($row->pagedescription); ?></p>
+									<p>Telephone : +<?php echo htmlentities($row->mobilenumber); ?></p>
+									<p>E-mail : <?php echo htmlentities($row->email); ?></p>
 								</address><?php $cnt = $cnt + 1;
 										}
 									} ?>

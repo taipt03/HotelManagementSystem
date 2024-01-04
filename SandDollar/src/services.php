@@ -68,7 +68,13 @@ if (isset($_SESSION['login_time'])) {
 					<h2>Facilities</h2>
 					<div class="services1">
 						<?php
-						$sql = "SELECT * FROM tblfacility";
+						$host = 'localhost';
+						$dbname = 'hotel_management';
+						$user = 'postgres';
+						$password = 'admin';
+						$dsn = "pgsql:host=$host;dbname=$dbname";
+						$dbh = new PDO($dsn, $user, $password);
+						$sql = "SELECT * from tblfacility";
 						$query = $dbh->prepare($sql);
 						$query->execute();
 						$results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -76,15 +82,15 @@ if (isset($_SESSION['login_time'])) {
 						if ($query->rowCount() > 0) {
 							foreach ($results as $row) {
 						?>
-								<div class="col-md-6 services-grid">
+								<div class="col-md-6 services-grid"> 
 									<br />
 									<div class="col-md-4 serv-img">
-										<img src="admin/images/<?php echo $row->Image; ?>" height="300" width="300" alt="" class="img-responsive">
+										<img src="admin/images/<?php echo $row->image; ?>" height="300" width="300" alt="" class="img-responsive">
 									</div>
 									<br />
 									<div class="col-md-6 serv-text">
-										<h4><?php echo htmlentities($row->FacilityTitle); ?></h4>
-										<p><?php echo htmlentities($row->Description); ?> </p>
+										<h4><?php echo htmlentities($row->facilitytitle); ?></h4>
+										<p><?php echo htmlentities($row->description); ?> </p>
 									</div>
 									<div class="clearfix"></div>
 								</div>

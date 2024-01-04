@@ -75,14 +75,14 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 
         <div class="bs-docs-example">
           <?php
+          
           $vid = $_GET['viewid'];
-
-          $sql = "SELECT tblbooking.bookingnumber,tbluser.fullname,tbluser.mobilenumber,tbluser.email,tblbooking.ID AS tid,tblbooking.IDtype,tblbooking.gender,tblbooking.address,tblbooking.checkindate,tblbooking.checkoutdate,tblbooking.bookingdate,tblbooking.remark,tblbooking.status,tblbooking.updationdate,tblcategory.categoryname,tblcategory.description,tblcategory.price,tblroom.roomname,tblroom.maxadult,tblroom.maxchild,tblroom.roomdesc,tblroom.noofbed,tblroom.image,tblroom.roomfacility 
-FROM tblbooking 
-JOIN tblroom ON tblbooking.roomId=tblroom.ID 
-JOIN tblcategory ON tblcategory.ID=tblroom.roomtype 
-JOIN tbluser ON tblbooking.userID=tbluser.ID  
-WHERE tblbooking.ID=:vid";
+          $sql = "SELECT tblbooking.bookingnumber,tbluser.fullname,tbluser.mobilenumber,tbluser.email,tblbooking.id as tid,tblbooking.idtype,tblbooking.gender,tblbooking.address,tblbooking.checkindate,tblbooking.checkoutdate,tblbooking.bookingdate,tblbooking.remark,tblbooking.status,tblbooking.updationDate,tblcategory.categoryname,tblcategory.description,tblcategory.price,tblroom.roomname,tblroom.maxadult,tblroom.maxchild,tblroom.roomdesc,tblroom.noofbed,tblroom.image,tblroom.roomfacility 
+          from tblbooking 
+          join tblroom on tblbooking.roomid=tblroom.id 
+          join tblcategory on tblcategory.id=tblroom.roomtype 
+          join tbluser on tblbooking.userid=tbluser.id  
+          where tblbooking.id=:vid";
           $query = $dbh->prepare($sql);
           $query->bindParam(':vid', $vid, PDO::PARAM_STR);
           $query->execute();
@@ -93,38 +93,38 @@ WHERE tblbooking.ID=:vid";
             foreach ($results as $row) {               ?>
               <table border="1" class="table table-bordered table-striped table-vcenter js-dataTable-full-pagination">
                 <tr>
-                  <th colspan="4" style="color: red;font-weight: bold;text-align: center;font-size: 20px"> Booking Number: <?php echo $row->BookingNumber; ?></th>
+                  <th colspan="4" style="color: red;font-weight: bold;text-align: center;font-size: 20px"> Booking Number: <?php echo $row->bookingnumber; ?></th>
                 </tr>
                 <tr>
                   <th colspan="4" style="color: blue;font-weight: bold;font-size: 15px"> Booking Detail:</th>
                 </tr>
                 <tr>
                   <th>Customer Name</th>
-                  <td><?php echo $row->FullName; ?></td>
+                  <td><?php echo $row->fullname; ?></td>
                   <th>Mobile Number</th>
-                  <td><?php echo $row->MobileNumber; ?></td>
+                  <td><?php echo $row->mobilenumber; ?></td>
                 </tr>
 
 
                 <tr>
 
                   <th>Email</th>
-                  <td><?php echo $row->Email; ?></td>
+                  <td><?php echo $row->email; ?></td>
                   <th>ID Type</th>
-                  <td><?php echo $row->IDType; ?></td>
+                  <td><?php echo $row->idtype; ?></td>
                 </tr>
                 <tr>
 
                   <th>Gender</th>
-                  <td><?php echo $row->Gender; ?></td>
+                  <td><?php echo $row->gender; ?></td>
                   <th>Address</th>
-                  <td><?php echo $row->Address; ?></td>
+                  <td><?php echo $row->address; ?></td>
                 </tr>
                 <tr>
                   <th>Check in Date</th>
-                  <td><?php echo $row->CheckinDate; ?></td>
+                  <td><?php echo $row->checkindate; ?></td>
                   <th>Check out Date</th>
-                  <td><?php echo $row->CheckoutDate; ?></td>
+                  <td><?php echo $row->checkoutdate; ?></td>
                 </tr>
 
                 <tr>
@@ -132,38 +132,38 @@ WHERE tblbooking.ID=:vid";
                   <th colspan="4" style="color: blue;font-weight: bold;font-size: 15px"> Room Detail:</th>
                 </tr>
                 <th>Room Type</th>
-                <td><?php echo $row->CategoryName; ?></td>
+                <td><?php echo $row->categoryname; ?></td>
                 <th>Room Price(perday)</th>
-                <td>$<?php echo $row->Price; ?></td>
+                <td>$<?php echo $row->price; ?></td>
                 </tr>
 
                 <tr>
 
                   <th>Room Name</th>
-                  <td><?php echo $row->RoomName; ?></td>
+                  <td><?php echo $row->roomname; ?></td>
                   <th>Room Description</th>
-                  <td><?php echo $row->RoomDesc; ?></td>
+                  <td><?php echo $row->roomdesc; ?></td>
                 </tr>
                 <tr>
 
                   <th>Max Adult</th>
-                  <td><?php echo $row->MaxAdult; ?></td>
+                  <td><?php echo $row->maxadult; ?></td>
                   <th>Max Child</th>
-                  <td><?php echo $row->MaxChild; ?></td>
+                  <td><?php echo $row->maxchild; ?></td>
                 </tr>
                 <tr>
 
                   <th>No.of Bed</th>
-                  <td><?php echo $row->NoofBed; ?></td>
+                  <td><?php echo $row->noofbed; ?></td>
                   <th>Room Image</th>
-                  <td><img src="admin/images/<?php echo $row->Image; ?>" width="100" height="100" value="<?php echo $row->Image; ?>"></td>
+                  <td><img src="admin/images/<?php echo $row->image; ?>" width="100" height="100" value="<?php echo $row->image; ?>"></td>
                 </tr>
                 <tr>
 
                   <th>Room Facility</th>
-                  <td><?php echo $row->RoomFacility; ?></td>
+                  <td><?php echo $row->roomfacility; ?></td>
                   <th>Booking Date</th>
-                  <td><?php echo $row->BookingDate; ?></td>
+                  <td><?php echo $row->bookingdate; ?></td>
                 </tr>
                 <tr>
                   <th colspan="4" style="color: blue;font-weight: bold;font-size: 15px"> Admin Remarks:</th>
@@ -172,25 +172,25 @@ WHERE tblbooking.ID=:vid";
 
                   <th>Order Final Status</th>
 
-                  <td> <?php $status = $row->Status;
+                  <td> <?php $status = $row->status;
 
-                        if ($row->Status == "Approved") {
+                        if ($row->status == "Approved") {
                           echo "Your Booking has been approved";
                         }
 
-                        if ($row->Status == "Cancelled") {
+                        if ($row->status == "Cancelled") {
                           echo "Your Booking has been cancelled";
                         }
 
 
-                        if ($row->Status == "") {
+                        if ($row->status == "") {
                           echo "Not Response Yet";
                         }; ?></td>
                   <th>Admin Remark</th>
-                  <?php if ($row->Status == "") { ?>
+                  <?php if ($row->status == "") { ?>
 
                     <td><?php echo "Not Updated Yet"; ?></td>
-                  <?php } else { ?> <td><?php echo htmlentities($row->Remark); ?>
+                  <?php } else { ?> <td><?php echo htmlentities($row->remark); ?>
                     </td>
                   <?php } ?>
                 </tr>
@@ -201,10 +201,10 @@ WHERE tblbooking.ID=:vid";
           } ?>
 
               </table>
-              <?php if ($row->Status != "Cancelled") { ?>
+              <?php if ($row->status != "Cancelled") { ?>
                 <a href="invoice.php?invid=<?php echo htmlentities($row->tid); ?>" class="btn btn-success">Invoice</a>
               <?php } ?>
-              <?php if ($row->Status == "") { ?>
+              <?php if ($row->status == "") { ?>
                 <button class="btn btn-primary waves-effect waves-light w-lg" data-toggle="modal" data-target="#myModal">Delete</button>
               <?php } ?>
               <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -238,7 +238,7 @@ WHERE tblbooking.ID=:vid";
               </div>
               <?php
               if (isset($_POST['submit'])) {
-                $bookingid = $row->BookingNumber;
+                $bookingid = $row->bookingnumber;
                 $status = "Cancelled";
                 $remark = $_POST['remark'];
 

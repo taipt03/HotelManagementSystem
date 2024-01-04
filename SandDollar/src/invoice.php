@@ -82,13 +82,19 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
       <p>My Hotel Booking Detail.</p>
       <div class="bs-docs-example">
         <?php
+        $host = 'localhost';
+        $dbname = 'hotel_management';
+        $user = 'postgres';
+        $password = 'admin';
+        $dsn = "pgsql:host=$host;dbname=$dbname";
+        $dbh = new PDO($dsn, $user, $password);
         $invid = $_GET['invid'];
-        $sql = "SELECT tblbooking.bookingnumber,tbluser.fullname,DATEDIFF(tblbooking.checkoutdate,tblbooking.checkindate) as ddf,tbluser.mobilenumber,tbluser.email,tblbooking.IDtype,tblbooking.gender,tblbooking.address,tblbooking.checkindate,tblbooking.checkoutdate,tblbooking.bookingdate,tblbooking.remark,tblbooking.status,tblbooking.updationdate,tblcategory.categoryname,tblcategory.description,tblcategory.price,tblroom.roomname,tblroom.maxadult,tblroom.maxchild,tblroom.roomdesc,tblroom.noofbed,tblroom.image,tblroom.roomfacility 
-FROM tblbooking 
-JOIN tblroom ON tblbooking.roomID=tblroom.ID 
-JOIN tblcategory ON tblcategory.ID=tblroom.roomtype 
-JOIN tbluser ON tblbooking.userID=tbluser.ID  
-WHERE tblbooking.ID=:invid";
+        $sql = "SELECT tblbooking.bookingnumber,tbluser.fullname,date_part('day',age(tblbooking.checkoutdate,tblbooking.checkindate)) as ddf,tbluser.mobilenumber,tbluser.email,tblbooking.idtype,tblbookinggender,tblbooking.address,tblbooking.checkindate,tblbooking.checkoutdate,tblbooking.bookingdate,tblbooking.remark,tblbooking.status,tblbooking.updationdate,tblcategory.categoryname,tblcategory.description,tblcategory.price,tblroom.roomname,tblroom.maxadult,tblroom.maxchild,tblroom.roomdesc,tblroom.noofbed,tblroom.image,tblroom.roomfacility 
+        from tblbooking 
+        join tblroom on tblbooking.roomid=tblroom.id 
+        join tblcategory on tblcategory.id=tblroom.roomtype 
+        join tbluser on tblbooking.userid=tbluser.id  
+        where tblbooking.id=:invid";
         $query = $dbh->prepare($sql);
         $query->bindParam(':invid', $invid, PDO::PARAM_STR);
         $query->execute();
@@ -99,31 +105,31 @@ WHERE tblbooking.ID=:invid";
           foreach ($results as $row) {               ?>
             <table border="1" class="table table-bordered table-striped table-vcenter js-dataTable-full-pagination">
               <tr>
-                <th colspan="5" style="text-align: center;color: red;font-size: 20px">Booking Number: <?php echo $row->BookingNumber; ?></th>
+                <th colspan="5" style="text-align: center;color: red;font-size: 20px">Booking Number: <?php echo $row->bookingnumber; ?></th>
               </tr>
 
 
               <tr>
                 <th>Customer Name</th>
-                <td><?php echo $row->FullName; ?></td>
+                <td><?php echo $row->fullname; ?></td>
                 <th>Mobile Number</th>
-                <td colspan="2"><?php echo $row->MobileNumber; ?></td>
+                <td colspan="2"><?php echo $row->mobilenumber; ?></td>
               </tr>
               <tr>
                 <th>Email</th>
-                <td><?php echo $row->Email; ?></td>
+                <td><?php echo $row->email; ?></td>
                 <th>Booking Date</th>
-                <td colspan="2"><?php echo $row->BookingDate; ?></td>
+                <td colspan="2"><?php echo $row->bookingdate; ?></td>
               </tr>
               <tr>
                 <th>Room Type</th>
-                <td><?php echo $row->CategoryName; ?></td>
+                <td><?php echo $row->categoryname; ?></td>
                 <th>Room Image</th>
-                <td><img src="admin/images/<?php echo $row->Image; ?>" width="100" height="100" value="<?php echo $row->Image; ?>"></td>
+                <td><img src="admin/images/<?php echo $row->image; ?>" width="100" height="100" value="<?php echo $row->image; ?>"></td>
               </tr>
               <tr>
                 <th>Room Price(perday)</th>
-                <td>$<?php echo $row->Price; ?></td>
+                <td>$<?php echo $row->price; ?></td>
                 <th>Total No. of Days</th>
                 <td colspan="2"><?php echo $row->ddf; ?></td>
               </tr>
@@ -140,7 +146,7 @@ WHERE tblbooking.ID=:invid";
                 <tr>
                   <td style="text-align: center;"><?php echo $ddf = $row->ddf; ?></td>
 
-                  <td style="text-align: center;"><?php echo $tp = $row->Price; ?></td>
+                  <td style="text-align: center;"><?php echo $tp = $row->price; ?></td>
                   <td style="text-align: center;"><?php echo $total = $ddf * $tp; ?></td>
 
                 </tr>

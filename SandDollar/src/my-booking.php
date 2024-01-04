@@ -1,7 +1,8 @@
 <?php
-include('includes/dbconnection.php');
 session_start();
 error_reporting(0);
+include('includes/dbconnection.php');
+
 if (strlen($_SESSION['hbmsuid'] == 0)) {
 	header('location:logout.php');
 } else {
@@ -87,8 +88,14 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 					</thead>
 					<tbody>
 						<?php
+						$host = 'localhost';
+						$dbname = 'hotel_management';
+						$user = 'postgres';
+						$password = 'admin';
+						$dsn = "pgsql:host=$host;dbname=$dbname";
+						$dbh = new PDO($dsn, $user, $password);
 						$uid = $_SESSION['hbmsuid'];
-						$sql = "SELECT tbluser.*,tblbooking.BookingNumber,tblbooking.Status,tblbooking.ID as bid from tblbooking join tbluser on tblbooking.UserID=tbluser.ID where UserID=:uid";
+						$sql = "SELECT tbluser.*,tblbooking.bookingnumber,tblbooking.status,tblbooking.id as bid from tblbooking join tbluser on tblbooking.userid=tbluser.id where userid=:uid";
 
 						$query = $dbh->prepare($sql);
 						$query->bindParam(':uid', $uid, PDO::PARAM_STR);
@@ -100,14 +107,14 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 							foreach ($results as $row) {               ?>
 								<tr>
 									<td><?php echo htmlentities($cnt); ?></td>
-									<td><?php echo htmlentities($row->BookingNumber); ?></td>
-									<td><?php echo htmlentities($row->FullName); ?></td>
-									<td><?php echo htmlentities($row->MobileNumber); ?></td>
-									<td><?php echo htmlentities($row->Email); ?></td>
-									<?php if ($row->Status == "") { ?>
+									<td><?php echo htmlentities($row->bookingnumber); ?></td>
+									<td><?php echo htmlentities($row->fullname); ?></td>
+									<td><?php echo htmlentities($row->mobilenumber); ?></td>
+									<td><?php echo htmlentities($row->email); ?></td>
+									<?php if ($row->status == "") { ?>
 
 										<td><?php echo "Still Pending"; ?></td>
-									<?php } else { ?> <td><?php echo htmlentities($row->Status); ?>
+									<?php } else { ?> <td><?php echo htmlentities($row->status); ?>
 										</td>
 									<?php } ?>
 									<td><a href="view-application-detail.php?viewid=<?php echo htmlentities($row->bid); ?>" class="btn btn-danger">View</a>

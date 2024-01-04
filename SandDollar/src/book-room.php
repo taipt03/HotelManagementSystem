@@ -36,7 +36,7 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 		} else if ($checkindate > $checkoutdate) {
 			echo '<script>alert("Check out date must be equal to / greater than  check in date")</script>';
 		} else {
-			$sql = "insert into tblbooking(RoomId,BookingNumber,UserID,IDType,Gender,Address,CheckinDate,CheckoutDate)values(:rid,:booknum,:uid,:idtype,:gender,:address,:checkindate,:checkoutdate)";
+			$sql = "insert into tblbooking(roomId,bookingnumber,userid,idtype,gender,address,checkindate,checkoutdate)values(:rid,:booknum,:uid,:idtype,:gender,:address,:checkindate,:checkoutdate)";
 			$query = $dbh->prepare($sql);
 			$query->bindParam(':rid', $rid, PDO::PARAM_STR);
 			$query->bindParam(':booknum', $booknum, PDO::PARAM_STR);
@@ -113,12 +113,16 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 
 					<div class="col-md-6 contact-right">
 						<form method="post">
-
-
 							</select>
 							<?php
+							$host = 'localhost';
+							$dbname = 'hotel_management';
+							$user = 'postgres';
+							$password = 'admin';
+							$dsn = "pgsql:host=$host;dbname=$dbname";
+							$dbh = new PDO($dsn, $user, $password);
 							$uid = $_SESSION['hbmsuid'];
-							$sql = "SELECT * from  tbluser where ID=:uid";
+							$sql = "SELECT * from  tbluser where id=:uid";
 							$query = $dbh->prepare($sql);
 							$query->bindParam(':uid', $uid, PDO::PARAM_STR);
 							$query->execute();
@@ -127,9 +131,9 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 							if ($query->rowCount() > 0) {
 								foreach ($results as $row) {               ?>
 									<h5>Name</h5>
-									<input type="text" value="<?php echo $row->FullName; ?>" name="name" class="form-control" required="true" readonly="true">
+									<input type="text" value="<?php echo $row->fullname; ?>" name="name" class="form-control" required="true" readonly="true">
 									<h5>Mobile Number</h5>
-									<input type="text" name="phone" class="form-control" required="true" maxlength="10" pattern="[0-9]+" value="<?php echo $row->MobileNumber; ?>" readonly="true">
+									<input type="text" name="phone" class="form-control" required="true" maxlength="10" pattern="[0-9]+" value="<?php echo $row->mobilenumber; ?>" readonly="true">
 									<h5>Email Address</h5>
 									<input type="email" value="<?php echo $row->Email; ?>" class="form-control" name="email" required="true" readonly="true"><?php $cnt = $cnt + 1;
 																																							}

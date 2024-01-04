@@ -90,6 +90,12 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 					<div class="col-md-6 contact-right">
 						<form method="post">
 							<?php
+							$host = 'localhost';
+							$dbname = 'hotel_management';
+							$user = 'postgres';
+							$password = 'admin';
+							$dsn = "pgsql:host=$host;dbname=$dbname";
+							$dbh = new PDO($dsn, $user, $password);
 							$uid = $_SESSION['hbmsuid'];
 							$sql = "SELECT * from  tbluser where ID=:uid";
 							$query = $dbh->prepare($sql);
@@ -100,13 +106,13 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 							if ($query->rowCount() > 0) {
 								foreach ($results as $row) {               ?>
 									<h5>Full Name</h5>
-									<input type="text" value="<?php echo $row->FullName; ?>" name="fname" required="true" class="form-control">
+									<input type="text" value="<?php echo $row->fullname; ?>" name="fname" required="true" class="form-control">
 									<h5>Mobile Number</h5>
-									<input type="text" name="mobno" class="form-control" required="true" maxlength="10" pattern="[0-9]+" value="<?php echo $row->MobileNumber; ?>">
+									<input type="text" name="mobno" class="form-control" required="true" maxlength="10" pattern="[0-9]+" value="<?php echo $row->mobilenumber; ?>">
 									<h5>Email Address</h5>
-									<input type="email" class="form-control" value="<?php echo $row->Email; ?>" name="email" required="true" readonly='true'>
+									<input type="email" class="form-control" value="<?php echo $row->email; ?>" name="email" required="true" readonly='true'>
 									<h5>Registration Date</h5>
-									<input type="text" value="<?php echo $row->RegDate; ?>" class="form-control" name="password" readonly="true">
+									<input type="text" value="<?php echo $row->regdate; ?>" class="form-control" name="password" readonly="true">
 									<br /><?php $cnt = $cnt + 1;
 										}
 									} ?>

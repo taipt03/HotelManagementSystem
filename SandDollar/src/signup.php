@@ -1,4 +1,10 @@
 <?php
+$host = 'localhost';
+$dbname = 'hotel_management';
+$user = 'postgres';
+$password = 'admin';
+$dsn = "pgsql:host=$host;dbname=$dbname";
+$dbh = new PDO($dsn, $user, $password);
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
@@ -13,7 +19,7 @@ if (isset($_POST['submit'])) {
 	$query->execute();
 	$results = $query->fetchAll(PDO::FETCH_OBJ);
 	if ($query->rowCount() == 0) {
-		$sql = "INSERT INTO tbluser(fullname,mobilenumber,email,password)values(:fname,:mobno,:email,:password)";
+		$sql = "Insert Into tbluser(FullName,MobileNumber,Email,Password)Values(:fname,:mobno,:email,:password)";
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':fname', $fname, PDO::PARAM_STR);
 		$query->bindParam(':email', $email, PDO::PARAM_STR);

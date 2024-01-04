@@ -61,7 +61,13 @@ if (isset($_SESSION['login_time'])) {
 				<div class="gallery-grids-top">
 					<div class="gallery-grids">
 						<?php
-						$sql = "SELECT * FROM tblroom";
+						$host = 'localhost';
+						$dbname = 'hotel_management';
+						$user = 'postgres';
+						$password = 'admin';
+						$dsn = "pgsql:host=$host;dbname=$dbname";
+						$dbh = new PDO($dsn, $user, $password);
+						$sql = "SELECT * from tblroom";
 						$query = $dbh->prepare($sql);
 						$query->execute();
 						$results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -71,7 +77,7 @@ if (isset($_SESSION['login_time'])) {
 						?>
 								<div class="col-md-3 gallery-grid">
 									<br />
-									<a class="example-image-link" href="admin/images/<?php echo $row->Image; ?>" data-lightbox="example-set" data-title=""><img class="example-image" src="admin/images/<?php echo $row->Image; ?>" height="300" width="300" alt="" /></a>
+									<a class="example-image-link" href="admin/images/<?php echo $row->image; ?>" data-lightbox="example-set" data-title=""><img class="example-image" src="admin/images/<?php echo $row->image; ?>" height="300" width="300" alt="" /></a>
 								</div>
 						<?php $cnt = $cnt + 1;
 							}
