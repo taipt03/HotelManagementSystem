@@ -1,3 +1,7 @@
+<?php
+    session_start();
+    error_reporting(0);
+?>
 <div class="header-top">
     <nav class="navbar navbar-default">
         <div class="container-fluid">
@@ -23,13 +27,20 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Rooms <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <?php
+
+                                $host = 'localhost';
+                                $dbname = 'hotel_management';
+                                $user = 'postgres';
+                                $password = 'admin';
+                                $dsn = "pgsql:host=$host;dbname=$dbname";
+                                $dbh = new PDO($dsn, $user, $password);
                                 $ret="SELECT * from tblcategory";
                                 $query1 = $dbh -> prepare($ret);
                                 $query1->execute();
                                 $resultss=$query1->fetchAll(PDO::FETCH_OBJ);
                                 foreach($resultss as $rows) {               
                             ?>
-                            <li><a href="category-details.php?catid=<?php echo htmlentities($rows->ID)?>"><?php echo htmlentities($rows->CategoryName)?></a></li>
+                            <li><a href="category-details.php?catid=<?php echo htmlentities($rows->id)?>"><?php echo htmlentities($rows->categoryname)?></a></li>
                             <?php } ?> 
                         </ul>
                     </li>
@@ -41,7 +52,8 @@
                         <li><a href="signup.php">Sign Up</a></li>
                         <li><a href="signin.php">Login</a></li>
                     <?php } ?>
-                    <?php if (strlen($_SESSION['hbmsuid']!=0)) {?>
+                    <?php
+                    if (strlen($_SESSION['hbmsuid']!=0)) {?>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Account <span class="caret"></span></a>
                             <ul class="dropdown-menu">
