@@ -17,7 +17,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 			$price = $_POST['price'];
 			$quantity = $_POST['quantity'];
 			$selectedFacilities = $_POST['roomfac'];
-	
+
 			$img = $_FILES["image"]["name"];
 			$extension = substr($img, strlen($img) - 4, strlen($img));
 			$allowed_extensions = array(".jpg", ".jpeg", ".png", ".gif");
@@ -26,27 +26,29 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 			} else {
 				$img = md5($img) . time() . $extension;
 				move_uploaded_file($_FILES["image"]["tmp_name"], "images/" . $img);
+
+				// Assuming you have established a database connection using PDO for PostgreSQL
+				$pdo = new PDO("pgsql:host=localhost;dbname=hotel_management", "postgres", "admin");
+
 				$sql = "INSERT INTO tblroom (roomtype, roomname, maxadult, maxchild, roomdesc, noofbed, image, price, quantity) VALUES (:roomtype, :roomname, :maxadult, :maxchild, :roomdesc, :noofbed, :image, :price, :quantity)";
-				$query = $dbh->prepare($sql);
-				$query->bindParam(':roomtype', $roomtype, PDO::PARAM_INT);
-				$query->bindParam(':roomname', $roomname, PDO::PARAM_STR);
-				$query->bindParam(':maxadult', $maxadult, PDO::PARAM_INT);
-				$query->bindParam(':maxchild', $maxchild, PDO::PARAM_INT);
-				$query->bindParam(':roomdesc', $roomdes, PDO::PARAM_STR);
-				$query->bindParam(':noofbed', $nobed, PDO::PARAM_INT);
-				$query->bindParam(':image', $img, PDO::PARAM_STR);
-				$query->bindParam(':price', $price, PDO::PARAM_INT);
-				$query->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+				$stmt = $pdo->prepare($sql);
+				$stmt->bindParam(':roomtype', $roomtype, PDO::PARAM_INT);
+				$stmt->bindParam(':roomname', $roomname, PDO::PARAM_STR);
+				$stmt->bindParam(':maxadult', $maxadult, PDO::PARAM_INT);
+				$stmt->bindParam(':maxchild', $maxchild, PDO::PARAM_INT);
+				$stmt->bindParam(':roomdesc', $roomdes, PDO::PARAM_STR);
+				$stmt->bindParam(':noofbed', $nobed, PDO::PARAM_INT);
+				$stmt->bindParam(':image', $img, PDO::PARAM_STR);
+				$stmt->bindParam(':price', $price, PDO::PARAM_INT);
+				$stmt->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+				$stmt->execute();
 
-				$query->execute();
-
-				$roomID = $dbh->lastInsertId();
+				$roomId = $pdo->lastInsertId();
 				$facilityIds = [];
 
 				if (!empty($selectedFacilities)) {
-					$tuples = array();
 					foreach ($selectedFacilities as $facilityTitle) {
-						$query = "SELECT ID FROM tblfacility WHERE facilitytitle = :facilityTitle";
+						$query = "SELECT id FROM tblfacility WHERE facilitytitle = :facilityTitle";
 						$stmt = $pdo->prepare($query);
 						$stmt->bindParam(':facilityTitle', $facilityTitle);
 						$stmt->execute();
@@ -65,8 +67,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 					}
 				}
 				
-	
-				if ($newRoomId > 0) {
+				if ($roomId > 0) {
 					echo '<script>alert("New room detail has been added.")</script>';
 					echo "<script>window.location.href ='add-room.php'</script>";
 				} else {
