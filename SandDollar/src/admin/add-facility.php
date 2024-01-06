@@ -5,27 +5,29 @@
 	if (strlen($_SESSION['hbmsaid']==0)) {
 		header('location:logout.php');
 	} else {
+	try{
 		if(isset($_POST['submit'])) {
-			$hbmsaid=$_SESSION['hbmsaid'];
-			$ftitle=$_POST['ftitle'];
-			$facdes=$_POST['facdes'];
-			$img=$_FILES["image"]["name"];
-			$extension = substr($img,strlen($img)-4,strlen($img));
-			$allowed_extensions = array(".jpg","jpeg",".png",".gif");
-			if(!in_array($extension,$allowed_extensions)) {
-				echo "<script>alert('Facility image has Invalid format. Only jpg / jpeg/ png /gif format allowed');</script>";
+
+			$ftitle = $_POST['ftitle'];
+			$facdes = $_POST['facdes'];
+			$img = $_FILES["image"]["name"];
+			$extension = substr($img, strlen($img) - 4, strlen($img));
+			$allowed_extensions = array(".jpg", ".jpeg", ".png", ".gif");
+
+			if (!in_array($extension, $allowed_extensions)) {
+				echo "<script>alert('Facility image has an invalid format. Only jpg / jpeg / png / gif format allowed');</script>";
 			} else {
-				$img=md5($img).time().$extension;
-				move_uploaded_file($_FILES["image"]["tmp_name"],"images/".$img);
-				$sql="INSERT INTO tblfacility(FacilityTitle,Description,Image)VALUES(:ftitle,:facdes,:img)";
-				$query=$dbh->prepare($sql);
-				$query->bindParam(':ftitle',$ftitle,PDO::PARAM_STR);
-				$query->bindParam(':facdes',$facdes,PDO::PARAM_STR);
-				$query->bindParam(':img',$img,PDO::PARAM_STR);
+				$img = md5($img) . time() . $extension;
+				move_uploaded_file($_FILES["image"]["tmp_name"], "images/" . $img);
+				$sql = "INSERT INTO tblfacility (facilitytitle, description, image) VALUES (:ftitle, :facdes, :img)";
+				$query = $dbh->prepare($sql);
+				$query->bindParam(':ftitle', $ftitle, PDO::PARAM_STR);
+				$query->bindParam(':facdes', $facdes, PDO::PARAM_STR);
+				$query->bindParam(':img', $img, PDO::PARAM_STR);
 				$query->execute();
 
-				$LastInsertId=$dbh->lastInsertId();
-				if ($LastInsertId>0) {
+				$lastInsertId = $dbh->lastInsertId();
+				if ($lastInsertId > 0) {
 					echo '<script>alert("Facility has been added.")</script>';
 					echo "<script>window.location.href ='add-facility.php'</script>";
 				} else {
@@ -33,6 +35,9 @@
 				}
 			}
 		}
+	} catch (PDOException $e) {
+		echo "Error: " . $e->getMessage();
+	}
 ?>
 
 <!DOCTYPE HTML>

@@ -24,9 +24,7 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 		$booknum = mt_rand(100000000, 999999999);
 		$rid = intval($_GET['rmid']);
 		$uid = $_SESSION['hbmsuid'];
-		$idtype = $_POST['idtype'];
-		$gender = $_POST['gender'];
-		$address = $_POST['address'];
+		$paymentmethod = $_POST['paymentmethod'];
 		$checkindate = $_POST['checkindate'];
 		$checkoutdate = $_POST['checkoutdate'];
 
@@ -36,14 +34,12 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 		} else if ($checkindate > $checkoutdate) {
 			echo '<script>alert("Check out date must be equal to / greater than  check in date")</script>';
 		} else {
-			$sql = "insert into tblbooking(roomId,bookingnumber,userid,idtype,gender,address,checkindate,checkoutdate)values(:rid,:booknum,:uid,:idtype,:gender,:address,:checkindate,:checkoutdate)";
+			$sql = "INSERT INTO tblbooking(roomid,bookingnumber,userid,paymentmethod,checkindate,checkoutdate)values(:rid,:booknum,:uid,:paymentmethod,:checkindate,:checkoutdate)";
 			$query = $dbh->prepare($sql);
 			$query->bindParam(':rid', $rid, PDO::PARAM_STR);
 			$query->bindParam(':booknum', $booknum, PDO::PARAM_STR);
 			$query->bindParam(':uid', $uid, PDO::PARAM_STR);
-			$query->bindParam(':idtype', $idtype, PDO::PARAM_STR);
-			$query->bindParam(':gender', $gender, PDO::PARAM_STR);
-			$query->bindParam(':address', $address, PDO::PARAM_STR);
+			$query->bindParam(':paymentmethod', $paymentmethod, PDO::PARAM_STR);
 			$query->bindParam(':checkindate', $checkindate, PDO::PARAM_STR);
 			$query->bindParam(':checkoutdate', $checkoutdate, PDO::PARAM_STR);
 			$query->execute();
@@ -134,25 +130,16 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 									<input type="text" value="<?php echo $row->fullname; ?>" name="name" class="form-control" required="true" readonly="true">
 									<h5>Mobile Number</h5>
 									<input type="text" name="phone" class="form-control" required="true" maxlength="10" pattern="[0-9]+" value="<?php echo $row->mobilenumber; ?>" readonly="true">
-									<h5>Email Address</h5>
-									<input type="email" value="<?php echo $row->Email; ?>" class="form-control" name="email" required="true" readonly="true"><?php $cnt = $cnt + 1;
+									<?php $cnt = $cnt + 1;
 																																							}
 																																						} ?>
 							<h5>ID Type</h5>
-							<select type="text" value="" class="form-control" name="idtype" required="true" class="form-control">
+							<select type="text" value="" class="form-control" name="paymentmethod" required="true" class="form-control">
 								<option value="">Choose ID Type</option>
-								<option value="Voter Card">Identification Card</option>
+								<option value="In Cash">Identification Card</option>
 								<option value="Adhar Card">Visa Card</option>
-								<option value="Driving Licence Card">Driving Licence Card</option>
-								<option value="Passport">Passport</option>
+								<option value="Napas">Napas</option>
 							</select>
-							<h5>Gender</h5>
-							<p style="text-align: left;"> <input type="radio" name="gender" id="gender" value="Female" checked="true">Female</p>
-
-							<p style="text-align: left;"> <input type="radio" name="gender" id="gender" value="Male">Male</p>
-
-							<h5>Address</h5>
-							<textarea type="text" rows="10" name="address" required="true"></textarea>
 							<h5>Checkin Date</h5>
 							<input type="date" value="" class="form-control" name="checkindate" required="true">
 							<h5>Checkout Date</h5>

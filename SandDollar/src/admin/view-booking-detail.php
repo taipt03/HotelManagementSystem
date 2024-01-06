@@ -5,6 +5,7 @@ include('includes/dbconnection.php');
 if (strlen($_SESSION['hbmsaid'] == 0)) {
 	header('location:logout.php');
 } else {
+	try{
 	if (isset($_POST['submit'])) {
 
 
@@ -24,6 +25,9 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 
 		echo '<script>alert("Remark has been updated")</script>';
 		echo "<script>window.location.href ='new-booking.php'</script>";
+	}
+	} catch (PDOException $e) {
+		echo "Error: " . $e->getMessage();
 	}
 ?>
 
@@ -125,7 +129,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 											<?php
 												$bookingid = $_GET['bookingid'];
 
-												$sql = "SELECT tblbooking.bookingnumber,tbluser.fullname,tbluser.mobilenumber,tbluser.email,tblbooking.paymentmethod,tbluser.gender,tbluser.address,tblbooking.checkindate,tblbooking.checkoutdate,tblbooking.bookingdate,tblbooking.remark,tblbooking.status,tblbooking.updationdate,tblcategory.categoryname,tblcategory.description,tblroom.price,tblroom.roomname,tblroom.maxadult,tblroom.maxchild,tblroom.roomdesc,tblroom.noofbed,tblroom.image,tblroom.roomfacility 
+												$sql = "SELECT tblbooking.bookingnumber,tbluser.fullname,tbluser.mobilenumber,tbluser.email,tblbooking.paymentmethod,tbluser.gender,tbluser.address,tblbooking.checkindate,tblbooking.checkoutdate,tblbooking.bookingdate,tblbooking.remark,tblbooking.status,tblbooking.updationdate,tblcategory.categoryname,tblcategory.description,tblroom.price,tblroom.roomname,tblroom.maxadult,tblroom.maxchild,tblroom.roomdesc,tblroom.noofbed,tblroom.image 
 												FROM tblbooking 
 												JOIN tblroom ON tblbooking.roomid=tblroom.id 
 												JOIN tblcategory ON tblcategory.id=tblroom.roomtype 
@@ -206,9 +210,6 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 																<td><img src="images/<?php echo $row->image; ?>" width="100" height="100" value="<?php echo $row->image; ?>"></td>
 															</tr>
 															<tr>
-
-																<th>Room Facility</th>
-																<td><?php echo $row->roomfacility; ?></td>
 																<th>Booking Date</th>
 																<td><?php echo $row->bookingdate; ?></td>
 															</tr>

@@ -11,7 +11,7 @@ $dbh = new PDO($dsn, $user, $password);
 if (isset($_POST['submit'])) {
 	$email = $_POST['email'];
 	$mobile = $_POST['mobile'];
-	$newpassword = md5($_POST['newpassword']);
+	$newpassword = $_POST['newpassword'];
 	$sql = "SELECT email FROM tbluser WHERE email=:email and mobilenumber=:mobile";
 	$query = $dbh->prepare($sql);
 	$query->bindParam(':email', $email, PDO::PARAM_STR);

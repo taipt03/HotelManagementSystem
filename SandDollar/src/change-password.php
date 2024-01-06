@@ -29,8 +29,8 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 	}
 	if (isset($_POST['submit'])) {
 		$uid = $_SESSION['hbmsuid'];
-		$cpassword = md5($_POST['currentpassword']);
-		$newpassword = md5($_POST['newpassword']);
+		$cpassword = $_POST['currentpassword'];
+		$newpassword = $_POST['newpassword'];
 		$sql = "SELECT id FROM tbluser WHERE id=:uid and password=:cpassword";
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':uid', $uid, PDO::PARAM_STR);

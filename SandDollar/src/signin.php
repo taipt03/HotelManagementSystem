@@ -11,8 +11,8 @@ include('includes/dbconnection.php');
 
 if (isset($_POST['login'])) {
 	$email = $_POST['email'];
-	$password = md5($_POST['password']);
-	$sql = "SELECT ID FROM tbluser WHERE Email=:email and Password=:password";
+	$password = $_POST['password'];
+	$sql = "SELECT id FROM tbluser WHERE email=:email and password=:password";
 	$query = $dbh->prepare($sql);
 	$query->bindParam(':email', $email, PDO::PARAM_STR);
 	$query->bindParam(':password', $password, PDO::PARAM_STR);
@@ -20,11 +20,11 @@ if (isset($_POST['login'])) {
 	$results = $query->fetchAll(PDO::FETCH_OBJ);
 	if ($query->rowCount() > 0) {
 		foreach ($results as $result) {
-			$_SESSION['hbmsuid'] = $result->ID;
+			$_SESSION['hbmsuid'] = $result->id;
 		}
 		$_SESSION['login'] = $_POST['email'];
 		$_SESSION['login_time'] = time(); //set time for session
-		echo "<script type='text/javascript'> alert('Login successful'); document.location ='index.php'; </script>";
+		echo "<script type='text/javascript'> alert('Login successful'); document.location ='my-booking.php'; </script>";
 	} else {
 		echo "<script>alert('Invalid Details');</script>";
 	}
