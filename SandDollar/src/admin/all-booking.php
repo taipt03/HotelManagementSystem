@@ -112,7 +112,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
                                                 $dbh = new PDO($dsn, $user, $password);
 
                                                 $tableName = 'tblbooking';
-                                                $no_of_records_per_page = 10;
+                                                $no_of_records_per_page = 4;
 
                                                 if (isset($_GET['pageno'])) {
                                                     $pageno = $_GET['pageno'];

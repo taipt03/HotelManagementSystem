@@ -213,20 +213,32 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 																$query2 = $dbh->prepare($sql2);
 																$query2->execute();
 																$result2 = $query2->fetchAll(PDO::FETCH_OBJ);
-																$availableFacilities = explode(',', $row->roomfacility);
-
+																
+																$roomFacilities = []; // array to store existing facilities of the room
+																
+																$sql3 = "SELECT facilitytitle FROM tblfacility 
+																		 INNER JOIN tblroomfacility ON tblfacility.id = tblfacility.id
+																		 WHERE tblroomfacility.room_id = $eid";
+																$query3 = $dbh->prepare($sql3);
+																$query3->execute();
+																$roomFacilitiesResult = $query3->fetchAll(PDO::FETCH_COLUMN);
+																
+																// Store the existing facilities in the `$roomFacilities` array
+																foreach ($roomFacilitiesResult as $facility) {
+																	$roomFacilities[] = $facility;
+																}
+																
 																foreach ($result2 as $row3) {
-																	$isChecked = in_array($row3->facilitytitle, $availableFacilities) ? 'checked' : '';
-																?>
+																	$checked = in_array($row3->facilitytitle, $roomFacilities) ? 'checked' : ''; // Check if the facility is already assigned to the room
+																	?>
 																	<div class="checkbox">
 																		<label>
-																			<input type="checkbox" name="roomfac[]" value="<?php echo htmlentities($row3->facilitytitle); ?>" <?php echo $isChecked; ?>>
+																			<input type="checkbox" name="roomfac[]" value="<?php echo htmlentities($row3->facilitytitle); ?>" <?php echo $checked; ?>>
 																			<?php echo htmlentities($row3->facilitytitle); ?>
 																		</label>
 																	</div>
-																<?php
-																}
-																?>
+																<?php } ?>
+		
 															</div>
 													<?php
 															$cnt = $cnt + 1;

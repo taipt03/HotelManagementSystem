@@ -170,7 +170,6 @@ CREATE TABLE tblroom (
   RoomDesc TEXT DEFAULT NULL,
   NoofBed int DEFAULT NULL,
   Image varchar(200) DEFAULT NULL,
-  RoomFacility varchar(200) DEFAULT NULL,
   CreationDate timestamp(0) NULL DEFAULT current_timestamp,
   Price int DEFAULT NULL,
   Quantity int DEFAULT NULL
@@ -181,10 +180,10 @@ CREATE TABLE tblroom (
 --
 
 -- SQLINES LICENSE FOR EVALUATION USE ONLY
-INSERT INTO tblroom (ID, RoomType, RoomName, MaxAdult, MaxChild, RoomDesc, NoofBed, Image, RoomFacility, CreationDate, Price, Quantity) VALUES
-(1, 1, 'Single Room for one person', 1, 2, 'A single room is for one person and contains a single bed, and will usually be quite small', 1, '2870b3543f2550c16a4551f03a0b84ac1582975994.jpg', '24-Hour room service,Free wireless internet acces', '2023-04-29 11:33:14',800,4),
-(2, 2, 'Double Room', 2, 2, 'A double room is a room intended for two people, usually a couple, to stay in. One person occupying a double room has to pay a supplement.', 2, '74375080377499ab76dad37484ee7f151582982180.jpg', '24-Hour room service,Free wireless internet acces', '2023-04-29 11:33:14',1200,3),
-(3, 3, 'triple room', 4, 2, 'A triple room is a hotel room that is made to comfortably accommodate three people. The triple room , simply called a triple, at times, may be configured with different bed sizes to ensure three hotel guests can be accommodated comfortably.', 3, '5ebc75f329d3b6f84d44c2c2e9764d4f1582976638.jpg', '24-Hour room service,Free wireless internet access,Laundry service,Babysitting on request,24-Hour doctor on call,Meeting facilities', '2023-04-29 11:33:14',1500,1);
+INSERT INTO tblroom (ID, RoomType, RoomName, MaxAdult, MaxChild, RoomDesc, NoofBed, Image, CreationDate, Price, Quantity) VALUES
+(1, 1, 'Single Room for one person', 1, 2, 'A single room is for one person and contains a single bed, and will usually be quite small', 1, '2870b3543f2550c16a4551f03a0b84ac1582975994.jpg', '2023-04-29 11:33:14',800,4),
+(2, 2, 'Double Room', 2, 2, 'A double room is a room intended for two people, usually a couple, to stay in. One person occupying a double room has to pay a supplement.', 2, '74375080377499ab76dad37484ee7f151582982180.jpg', '2023-04-29 11:33:14',1200,3),
+(3, 3, 'triple room', 4, 2, 'A triple room is a hotel room that is made to comfortably accommodate three people. The triple room , simply called a triple, at times, may be configured with different bed sizes to ensure three hotel guests can be accommodated comfortably.', 3, '5ebc75f329d3b6f84d44c2c2e9764d4f1582976638.jpg', '2023-04-29 11:33:14',1500,1);
 
 
 -- SQLINES DEMO *** ---------------------------------------
@@ -224,10 +223,51 @@ CREATE TABLE tblpayment (
   --ID SERIAL int(10) PRIMARY KEY
   UserID int NOT NULL,
   RoomID int NOT NULL,
+  BookingID int NOT NULL,
   FromDate TIMESTAMP(0) NULL DEFAULT CURRENT_TIMESTAMP,
   ToDAte TIMESTAMP(0) NULL DEFAULT CURRENT_TIMESTAMP,
   TotalPrice INT DEFAULT NULL
 ) ;
+
+CREATE TABLE tblroomfacility (
+  room_id INT,
+  facility_id INT,
+  PRIMARY KEY (room_id, facility_id),
+  FOREIGN KEY (room_id) REFERENCES tblroom(id),
+  FOREIGN KEY (facility_id) REFERENCES tblfacility(id)
+);
+
+Alter table tblroom
+add constraint fk_roomtype
+foreign key (roomtype) 
+references tblcategory(id);
+
+Alter table tblbooking
+add constraint fk_userid
+Foreign Key (userid) REFERENCES tbluser(id);
+
+alter table tblbooking
+add CONSTRAINT fk_roomid
+Foreign Key (roomid) REFERENCES tblroom(id);
+
+alter table tblcontact
+add CONSTRAINT fk_userid
+Foreign Key (userid) REFERENCES tbluser(id);
+
+alter table tblpayment
+add CONSTRAINT fk_userid
+Foreign Key (userid) REFERENCES tbluser(id);
+
+alter table tblpayment
+add CONSTRAINT fk_bookingid
+Foreign Key (bookingid) REFERENCES tblbooking(id);
+
+alter table tblpayment
+add CONSTRAINT fk_roomid
+Foreign Key (roomid) REFERENCES tblroom(id);
+
+
+
 
 COMMIT;
 

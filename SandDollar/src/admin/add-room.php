@@ -6,48 +6,75 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 	header('location:logout.php');
 } else {
 	if (isset($_POST['submit'])) {
-
-		$hbmsaid = $_SESSION['hbmsaid'];
-		$roomtype = $_POST['roomtype'];
-		$roomname = $_POST['roomname'];
-		$maxadult = $_POST['maxadult'];
-		$maxchild = $_POST['maxchild'];
-		$roomfac = implode(',', $_POST['roomfac']);
-		$roomdes = $_POST['roomdes'];
-		$nobed = $_POST['nobed'];
-		$price = $_POST['price'];
-		$quantity = $_POST['$quantity'];
-		$img = $_FILES["image"]["name"];
-		$extension = substr($img, strlen($img) - 4, strlen($img));
-		$allowed_extensions = array(".jpg", "jpeg", ".png", ".gif");
-		if (!in_array($extension, $allowed_extensions)) {
-			echo "<script>alert('Facility image has Invalid format. Only jpg / jpeg/ png /gif format allowed');</script>";
-		} else {
-
-			$img = md5($img) . time() . $extension;
-			move_uploaded_file($_FILES["image"]["tmp_name"], "images/" . $img);
-			$sql = "INSERT INTO tblroom(RoomType,RoomName,MaxAdult,MaxChild,RoomDesc,NoofBed,Image,RoomFacility, Price, Quantity)VALUES(:roomtype,:roomname,:maxadult,:maxchild,:roomdes,:nobed,:img,:roomfac, :price, :quantity)";
-			$query = $dbh->prepare($sql);
-			$query->bindParam(':roomtype', $roomtype, PDO::PARAM_STR);
-			$query->bindParam(':roomname', $roomname, PDO::PARAM_STR);
-			$query->bindParam(':maxadult', $maxadult, PDO::PARAM_STR);
-			$query->bindParam(':maxchild', $maxchild, PDO::PARAM_STR);
-			$query->bindParam(':roomdes', $roomdes, PDO::PARAM_STR);
-			$query->bindParam(':nobed', $nobed, PDO::PARAM_STR);
-			$query->bindParam(':roomfac', $roomfac, PDO::PARAM_STR);
-			$query->bindParam(':img', $img, PDO::PARAM_STR);
-			$query->bindParam(':price', $price, PDO::PARAM_STR);
-			$query->bindParam('quantity', $quantity, PDO::PARAM_INT);
-
-			$query->execute();
-
-			$LastInsertId = $dbh->lastInsertId();
-			if ($LastInsertId > 0) {
-				echo '<script>alert("New room detail has been added.")</script>';
-				echo "<script>window.location.href ='add-room.php'</script>";
+		try {
+			$hbmsaid = $_SESSION['hbmsaid'];
+			$roomtype = $_POST['roomtype'];
+			$roomname = $_POST['roomname'];
+			$maxadult = $_POST['maxadult'];
+			$maxchild = $_POST['maxchild'];
+			$roomdes = $_POST['roomdes'];
+			$nobed = $_POST['nobed'];
+			$price = $_POST['price'];
+			$quantity = $_POST['quantity'];
+			$selectedFacilities = $_POST['roomfac'];
+	
+			$img = $_FILES["image"]["name"];
+			$extension = substr($img, strlen($img) - 4, strlen($img));
+			$allowed_extensions = array(".jpg", ".jpeg", ".png", ".gif");
+			if (!in_array($extension, $allowed_extensions)) {
+				echo "<script>alert('Facility image has Invalid format. Only jpg / jpeg/ png /gif format allowed');</script>";
 			} else {
-				echo '<script>alert("Something Went Wrong. Please try again")</script>';
+				$img = md5($img) . time() . $extension;
+				move_uploaded_file($_FILES["image"]["tmp_name"], "images/" . $img);
+				$sql = "INSERT INTO tblroom (roomtype, roomname, maxadult, maxchild, roomdesc, noofbed, image, price, quantity) VALUES (:roomtype, :roomname, :maxadult, :maxchild, :roomdesc, :noofbed, :image, :price, :quantity)";
+				$query = $dbh->prepare($sql);
+				$query->bindParam(':roomtype', $roomtype, PDO::PARAM_INT);
+				$query->bindParam(':roomname', $roomname, PDO::PARAM_STR);
+				$query->bindParam(':maxadult', $maxadult, PDO::PARAM_INT);
+				$query->bindParam(':maxchild', $maxchild, PDO::PARAM_INT);
+				$query->bindParam(':roomdesc', $roomdes, PDO::PARAM_STR);
+				$query->bindParam(':noofbed', $nobed, PDO::PARAM_INT);
+				$query->bindParam(':image', $img, PDO::PARAM_STR);
+				$query->bindParam(':price', $price, PDO::PARAM_INT);
+				$query->bindParam(':quantity', $quantity, PDO::PARAM_INT);
+
+				$query->execute();
+
+				$roomID = $dbh->lastInsertId();
+				$facilityIds = [];
+
+				if (!empty($selectedFacilities)) {
+					$tuples = array();
+					foreach ($selectedFacilities as $facilityTitle) {
+						$query = "SELECT ID FROM tblfacility WHERE facilitytitle = :facilityTitle";
+						$stmt = $pdo->prepare($query);
+						$stmt->bindParam(':facilityTitle', $facilityTitle);
+						$stmt->execute();
+						$row = $stmt->fetch(PDO::FETCH_ASSOC);
+						if ($row) {
+							$facilityIds[] = $row['id'];
+						}
+					}
+
+					foreach ($facilityIds as $facilityId) {
+						$query = "INSERT INTO tblroomfacility (room_id, facility_id) VALUES (:roomId, :facilityId)";
+						$stmt = $pdo->prepare($query);
+						$stmt->bindParam(':roomId', $roomId);
+						$stmt->bindParam(':facilityId', $facilityId);
+						$stmt->execute();
+					}
+				}
+				
+	
+				if ($newRoomId > 0) {
+					echo '<script>alert("New room detail has been added.")</script>';
+					echo "<script>window.location.href ='add-room.php'</script>";
+				} else {
+					echo '<script>alert("Something Went Wrong. Please try again")</script>';
+				}
 			}
+		} catch (PDOException $e) {
+			echo "Error: " . $e->getMessage();
 		}
 	}
 ?>
@@ -160,7 +187,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 
 															foreach ($result2 as $row) {
 															?>
-																<option value="<?php echo htmlentities($row->ID); ?>"><?php echo htmlentities($row->categoryname); ?></option>
+																<option value="<?php echo htmlentities($row->id); ?>"><?php echo htmlentities($row->categoryname); ?></option>
 															<?php } ?>
 
 
@@ -170,8 +197,8 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 													<div class="form-group"> <label for="exampleInputEmail1">Max Child</label> <input type="text" class="form-control" name="maxchild" pattern="[0-9]+" required> </div>
 													<div class="form-group"> <label for="exampleInputEmail1">Room Description</label> <textarea type="text" class="form-control" name="roomdes" value=""></textarea> </div>
 													<div class="form-group"> <label for="exampleInputEmail1">No. of Bed</label> <input type="text" class="form-control" name="nobed" pattern="[0-9]+" required> </div>
-													<div class="form-group"> <label for="exampleInputEmail1">Price</label> <input type="text" class="form-control" name="nobed" pattern="[0-9]+" required> </div>
-													<div class="form-group"> <label for="exampleInputEmail1">Quantity</label> <input type="text" class="form-control" name="nobed" pattern="[0-9]+" required> </div>
+													<div class="form-group"> <label for="exampleInputEmail1">Price</label> <input type="text" class="form-control" name="price" pattern="[0-9]+" required> </div>
+													<div class="form-group"> <label for="exampleInputEmail1">Quantity</label> <input type="text" class="form-control" name="quantity" pattern="[0-9]+" required> </div>
 													<div class="form-group"> <label for="exampleInputEmail1">Room Image</label> <input type="file" class="form-control" name="image" value="" required='true'> </div>
 													<div class="form-group"> <label for="exampleInputEmail1">Room Facility</label>
 													<?php
