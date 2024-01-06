@@ -5,21 +5,22 @@ include('includes/dbconnection.php');
 if (strlen($_SESSION['hbmsaid'] == 0)) {
 	header('location:logout.php');
 } else {
+	try{
 	if (isset($_POST['submit'])) {
-
 		$hbmsaid = $_SESSION['hbmsaid'];
 		$roomtype = $_POST['roomtype'];
 		$roomname = $_POST['roomname'];
 		$maxadult = $_POST['maxadult'];
 		$maxchild = $_POST['maxchild'];
-		$roomfac = implode(',', $_POST['roomfac']);
+		$selectedFacilities = $_POST['roomfac'];
 		$roomdes = $_POST['roomdes'];
 		$nobed = $_POST['nobed'];
+		$price = $_POST['price'];
+		$quantity = $_POST['quantity'];
 		$eid = $_GET['editid'];
-		$price = $_GET['price'];
-		$quantity = $_GET['quantity'];
 
-		$sql = "UPDATE tblroom SET roomtype=:roomtype,roomname=:roomname,maxadult=:maxadult,maxchild=:maxchild,roomdesc=:roomdes,noofbed=:nobed,roomfacility=:roomfac, price:=price, quantity=quantity where id=:eid";
+
+		$sql = "UPDATE tblroom SET roomtype=:roomtype, roomname=:roomname, maxadult=:maxadult, maxchild=:maxchild, roomdesc=:roomdes, noofbed=:nobed, price=:price, quantity=:quantity WHERE id=:eid";
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':roomtype', $roomtype, PDO::PARAM_STR);
 		$query->bindParam(':roomname', $roomname, PDO::PARAM_STR);
@@ -27,16 +28,38 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 		$query->bindParam(':maxchild', $maxchild, PDO::PARAM_STR);
 		$query->bindParam(':roomdes', $roomdes, PDO::PARAM_STR);
 		$query->bindParam(':nobed', $nobed, PDO::PARAM_STR);
-		$query->bindParam(':roomfac', $roomfac, PDO::PARAM_STR);
+		$query->bindParam(':price', $price, PDO::PARAM_STR);
+		$query->bindParam(':quantity', $quantity, PDO::PARAM_STR);
 		$query->bindParam(':eid', $eid, PDO::PARAM_STR);
-		$query->bindParam('price', $price, PDO::PARAM_STR);
-		$query->bindParam('quantity', $quantity, PDO::PARAM_STR);
 		$query->execute();
 
-		$query->execute();
+		$sqlDelete = "DELETE FROM tblroomfacility WHERE room_id = :eid";
+		$deleteStmt = $dbh->prepare($sqlDelete);
+		$deleteStmt->bindParam(':eid', $eid);
+		$deleteStmt->execute();
+
+		// Insert new room facilities
+		foreach ($selectedFacilities as $facilityTitle) {
+			$query = "SELECT id FROM tblfacility WHERE facilitytitle = :facilityTitle";
+			$stmt = $dbh->prepare($query);
+			$stmt->bindParam(':facilityTitle', $facilityTitle);
+			$stmt->execute();
+			$row = $stmt->fetch(PDO::FETCH_ASSOC);
+			if ($row) {
+				$facilityId = $row['id'];
+				$query = "INSERT INTO tblroomfacility (room_id, facility_id) VALUES (:eid, :facilityId)";
+				$stmt = $dbh->prepare($query);
+				$stmt->bindParam(':eid', $eid);
+				$stmt->bindParam(':facilityId', $facilityId);
+				$stmt->execute();
+			}
+		}
 
 		echo '<script>alert("Room detail has been updated")</script>';
 		echo "<script>window.location.href ='manage-room.php'</script>";
+	}
+	} catch (PDOException $e) {
+		echo "Error: " . $e->getMessage();
 	}
 ?>
 	<!DOCTYPE HTML>
@@ -186,11 +209,11 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 															</div>
 															<div class="form-group">
 																<label for="exampleInputEmail1">Price</label>
-																<input type="text" class="form-control" name="maxadult" value="<?php echo $row->price; ?>" pattern="[0-9]+" required='true'>
+																<input type="text" class="form-control" name="price" value="<?php echo $row->price; ?>" pattern="[0-9]+" required='true'>
 															</div>
 															<div class="form-group">
 																<label for="exampleInputEmail1">Quantity</label>
-																<input type="text" class="form-control" name="maxadult" value="<?php echo $row->quantity; ?>" pattern="[0-9]+" required='true'>
+																<input type="text" class="form-control" name="quantity" value="<?php echo $row->quantity; ?>" pattern="[0-9]+" required='true'>
 															</div>
 															<div class="form-group">
 																<label for="exampleInputEmail1">Room Description</label>
@@ -217,9 +240,10 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 																$roomFacilities = []; // array to store existing facilities of the room
 																
 																$sql3 = "SELECT facilitytitle FROM tblfacility 
-																		 INNER JOIN tblroomfacility ON tblfacility.id = tblfacility.id
-																		 WHERE tblroomfacility.room_id = $eid";
+																		  INNER JOIN tblroomfacility ON tblfacility.id = tblroomfacility.facility_id
+																		  WHERE tblroomfacility.room_id = :eid";
 																$query3 = $dbh->prepare($sql3);
+																$query3->bindParam(':eid', $eid);
 																$query3->execute();
 																$roomFacilitiesResult = $query3->fetchAll(PDO::FETCH_COLUMN);
 																
@@ -229,7 +253,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 																}
 																
 																foreach ($result2 as $row3) {
-																	$checked = in_array($row3->facilitytitle, $roomFacilities) ? 'checked' : ''; // Check if the facility is already assigned to the room
+																	$checked = in_array($row3->facilitytitle, $roomFacilities) ? 'checked="checked"' : ''; // Check if the facility is already assigned to the room
 																	?>
 																	<div class="checkbox">
 																		<label>
@@ -237,7 +261,9 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 																			<?php echo htmlentities($row3->facilitytitle); ?>
 																		</label>
 																	</div>
-																<?php } ?>
+																<?php
+																}
+																?>
 		
 															</div>
 													<?php

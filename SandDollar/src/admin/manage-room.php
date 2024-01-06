@@ -5,15 +5,26 @@ include('includes/dbconnection.php');
 if (strlen($_SESSION['hbmsaid'] == 0)) {
 	header('location:logout.php');
 } else {
-
+	try{
 	if (isset($_GET['delid'])) {
 		$rid = intval($_GET['delid']);
+
+		$sql2 = "DELETE FROM tblroomfacility WHERE room_id=:rid";
+		$query = $dbh->prepare($sql2);
+		$query->bindParam(':rid', $rid, PDO::PARAM_STR);
+		$query->execute();
+
 		$sql = "DELETE FROM tblroom WHERE id=:rid";
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':rid', $rid, PDO::PARAM_STR);
 		$query->execute();
+
+		
 		echo "<script>alert('Data deleted');</script>";
 		echo "<script>window.location.href = 'manage-room.php'</script>";
+	}
+	} catch (PDOException $e) {
+		echo "Error: " . $e->getMessage();
 	}
 
 ?>
