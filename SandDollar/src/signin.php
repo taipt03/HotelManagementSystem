@@ -24,7 +24,7 @@ if (isset($_POST['login'])) {
 		}
 		$_SESSION['login'] = $_POST['email'];
 		$_SESSION['login_time'] = time(); //set time for session
-		echo "<script type='text/javascript'> alert('Login successful'); document.location ='my-booking.php'; </script>";
+		echo "<script type='text/javascript'> alert('Login successful'); document.location ='index.php'; </script>";
 	} else {
 		echo "<script>alert('Invalid Details');</script>";
 	}

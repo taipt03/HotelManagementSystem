@@ -39,7 +39,7 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 		$results = $query->fetchAll(PDO::FETCH_OBJ);
 
 		if ($query->rowCount() > 0) {
-			$con = "update tbluser set password=:newpassword where id=:uid";
+			$con = "UPDATE tbluser SET password=:newpassword WHERE id=:uid";
 			$chngpwd1 = $dbh->prepare($con);
 			$chngpwd1->bindParam(':uid', $uid, PDO::PARAM_STR);
 			$chngpwd1->bindParam(':newpassword', $newpassword, PDO::PARAM_STR);

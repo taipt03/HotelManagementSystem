@@ -1,7 +1,7 @@
 <?php
-include('includes/dbconnection.php');
 session_start();
 error_reporting(0);
+include('includes/dbconnection.php');
 if (strlen($_SESSION['hbmsuid'] == 0)) {
 	header('location:logout.php');
 } else {
@@ -131,8 +131,8 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 									<h5>Mobile Number</h5>
 									<input type="text" name="phone" class="form-control" required="true" maxlength="10" pattern="[0-9]+" value="<?php echo $row->mobilenumber; ?>" readonly="true">
 									<?php $cnt = $cnt + 1;
-																																							}
-																																						} ?>
+								}
+							} ?>
 							<h5>ID Type</h5>
 							<select type="text" value="" class="form-control" name="paymentmethod" required="true" class="form-control">
 								<option value="">Choose ID Type</option>

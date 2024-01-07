@@ -79,11 +79,19 @@ if (isset($_SESSION['login_time'])) {
 					$sql = "SELECT tblroom.*, tblroom.id as rmid , tblroom.price, tblcategory.id, tblcategory.categoryname from tblroom 
 							join tblcategory on tblroom.roomtype = tblcategory.id 
 							where tblroom.roomtype=:cid";
+			        $sql1 = "SELECT tblfacility.facilitytitle as fname from tblroomfacility 
+							join tblfacility on tblfacility.id = tblroomfacility.facility_id
+							where tblroomfacility.room_id=:fid";
 					$query = $dbh->prepare($sql);
 					$query->bindParam(":cid", $cid, PDO::PARAM_INT);
 					$query->execute();
 					$results = $query->fetchAll(PDO::FETCH_OBJ);
+					$query1 = $dbh->prepare($sql1);
+					$query1->bindParam(":fid", $cid, PDO::PARAM_INT);
+					$query1->execute();
+					$results1 = $query1->fetchAll(PDO::FETCH_OBJ);
 					$cnt = 1;
+					$cnt1 = 1;
 					if ($query->rowCount() > 0) {
 						foreach ($results as $row) {
 					?>
@@ -93,12 +101,24 @@ if (isset($_SESSION['login_time'])) {
 										<img src="admin/images/<?php echo $row->image; ?>" class=" mask img-responsive zoom-img" alt="" /></a>
 								</div>
 								<div class="col-md-7 room-grid1">
-									<h4> <?php echo htmlentities($row->facilitytitle); ?> </h4>
+									<h4>  </h4>
 									<p><?php echo htmlentities($row->roomdesc); ?></p>
-									<p>Max Adult:<?php echo htmlentities($row->maxadult); ?></p>
-									<p>Max Child:<?php echo htmlentities($row->maxchild); ?></p>
-									<p>No of Beds:<?php echo htmlentities($row->noofbed); ?></p>
-									<p>Room Facilities:<?php echo htmlentities($row->roomfacility); ?></p>
+									<p>Max Adult:<?php echo " ", htmlentities($row->maxadult); ?></p>
+									<p>Max Child:<?php echo " ", htmlentities($row->maxchild); ?></p>
+									<p>No of Beds:<?php echo " ", htmlentities($row->noofbed); ?></p>
+									<p>Facilities:
+									<div>
+										<?php
+										if ($query1->rowCount() > 0) {
+											foreach ($results1 as $row1) {
+										?>
+										<div>
+											<p><?php echo "-" , " ", htmlentities($row1->fname); ?></p>										</div>
+										<?php $cnt1 = $cnt1 + 1;
+											}
+										} ?>
+									</div>
+									</p>
 									<p>Price: <?php echo htmlentities($row->price); ?></p>
 									<button class="btn btn-success"><a href="book-room.php?rmid=<?php echo $row->rmid; ?>">Book</a></button>
 								</div>

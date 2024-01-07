@@ -19,7 +19,7 @@ if (isset($_POST['submit'])) {
 	$query->execute();
 	$results = $query->fetchAll(PDO::FETCH_OBJ);
 	if ($query->rowCount() > 0) {
-		$con = "update tbluser set Password=:newpassword where email=:email and mobilenumber=:mobile";
+		$con = "UPDATE tbluser set password=:newpassword where email=:email and mobilenumber=:mobile";
 		$chngpwd1 = $dbh->prepare($con);
 		$chngpwd1->bindParam(':email', $email, PDO::PARAM_STR);
 		$chngpwd1->bindParam(':mobile', $mobile, PDO::PARAM_STR);
