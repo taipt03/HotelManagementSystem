@@ -83,38 +83,6 @@ if (isset($_SESSION['login_time'])) {
 			<div class="container">
 				<h3>Services</h3>
 				<div class="features-grids">
-					<?php
-					$host = 'localhost';
-					$dbname = 'hotel_management';
-					$user = 'postgres';
-					$password = 'admin';
-					$dsn = "pgsql:host=$host;dbname=$dbname";
-					$dbh = new PDO($dsn, $user, $password);
-					$sql = "SELECT * from tblfacility order by rand() limit 4";
-					$query = $dbh->prepare($sql);
-					$query->execute();
-					$results = $query->fetchAll(PDO::FETCH_OBJ);
-
-					$cnt = 1;
-					if ($query->rowCount() > 0) {
-						foreach ($results as $row) {               ?>
-							<div class="col-md-3 feature-grid">
-								<div class="feature">
-
-									<div class="feature1">
-										<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-										<h4><?php echo htmlentities($row->facilitytitle); ?></h4>
-									</div>
-									<div class="feature2">
-										<p><?php echo htmlentities($row->description); ?>. </p>
-									</div>
-								</div>
-							</div>
-					<?php $cnt = $cnt + 1;
-						}
-					} ?>
-
-
 					<div class="clearfix"></div>
 				</div>
 			</div>

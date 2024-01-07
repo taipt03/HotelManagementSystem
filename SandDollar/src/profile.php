@@ -24,11 +24,19 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 		$uid = $_SESSION['hbmsuid'];
 		$AName = $_POST['fname'];
 		$mobno = $_POST['mobno'];
-		$sql = "update tbluser set FullName=:name,MobileNumber=:mobilenumber where ID=:uid";
+		$address = $_POST['address'];
+		$gender = $_POST['gender'];
+		$idtype = $_POST['idtype'];
+
+		$sql = "UPDATE tbluser set fullname=:name,mobilenumber=:mobilenumber,address=:address, gender=:gender, idtype = :idtype where id=:uid";
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':name', $AName, PDO::PARAM_STR);
 		$query->bindParam(':mobilenumber', $mobno, PDO::PARAM_STR);
 		$query->bindParam(':uid', $uid, PDO::PARAM_STR);
+		$query->bindParam(':address', $address, PDO::PARAM_STR);
+		$query->bindParam(':gender', $gender, PDO::PARAM_STR);
+		$query->bindParam(':idtype', $idtype, PDO::PARAM_STR);
+
 		$query->execute();
 
 		echo '<script>alert("Profile has been updated")</script>';
@@ -107,12 +115,31 @@ if (strlen($_SESSION['hbmsuid'] == 0)) {
 								foreach ($results as $row) {               ?>
 									<h5>Full Name</h5>
 									<input type="text" value="<?php echo $row->fullname; ?>" name="fname" required="true" class="form-control">
+
 									<h5>Mobile Number</h5>
 									<input type="text" name="mobno" class="form-control" required="true" maxlength="10" pattern="[0-9]+" value="<?php echo $row->mobilenumber; ?>">
+
 									<h5>Email Address</h5>
-									<input type="email" class="form-control" value="<?php echo $row->email; ?>" name="email" required="true" readonly='true'>
+									<input type="email" class="form-control" value="<?php echo $row->email; ?>" name="email" required="true" readonly="true">
+
 									<h5>Registration Date</h5>
 									<input type="text" value="<?php echo $row->regdate; ?>" class="form-control" name="password" readonly="true">
+
+									<h5>Address</h5>
+									<input type="text" value="<?php echo $row->address; ?>" class="form-control" name="address" required="true">
+
+									<h5>Gender</h5>
+									<select name="gender" class="form-control" required="true">
+										<option value="M" <?php if($row->gender == "M") echo 'selected="selected"'; ?>>Male</option>
+										<option value="F" <?php if($row->gender == "F") echo 'selected="selected"'; ?>>Female</option>
+									</select>
+
+									<h5>ID Type</h5>
+									<select name="idtype" class="form-control" required="true">
+										<option value="passport" <?php if($row->id_type == "passport") echo 'selected="selected"'; ?>>Passport</option>
+										<option value="id_card" <?php if($row->id_type == "id_card") echo 'selected="selected"'; ?>>Identification Card</option>
+										<option value="driver_license" <?php if($row->id_type == "driver_license") echo 'selected="selected"'; ?>>Driver License</option>
+									</select>
 									<br /><?php $cnt = $cnt + 1;
 										}
 									} ?>

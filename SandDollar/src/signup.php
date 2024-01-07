@@ -13,18 +13,26 @@ if (isset($_POST['submit'])) {
 	$mobno = $_POST['mobno'];
 	$email = $_POST['email'];
 	$password = $_POST['password'];
+	$idtype = $_POST['idtype'];
+	$gender = $_POST['gender'];
+	$address = $_POST['address'];
+
 	$ret = "SELECT email from tbluser where email=:email";
 	$query = $dbh->prepare($ret);
 	$query->bindParam(':email', $email, PDO::PARAM_STR);
 	$query->execute();
 	$results = $query->fetchAll(PDO::FETCH_OBJ);
+
 	if ($query->rowCount() == 0) {
-		$sql = "INSERT INTO tbluser(fullname,mobilenumber,email,password)Values(:fname,:mobno,:email,:password)";
+		$sql = "INSERT INTO tbluser(fullname,mobilenumber,email,password, idtype, gender, address)Values(:fname,:mobno,:email,:password, :idtype, :gender, :address)";
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':fname', $fname, PDO::PARAM_STR);
 		$query->bindParam(':email', $email, PDO::PARAM_STR);
 		$query->bindParam(':mobno', $mobno, PDO::PARAM_INT);
 		$query->bindParam(':password', $password, PDO::PARAM_STR);
+		$query->bindParam(':idtype', $idtype, PDO::PARAM_STR);
+		$query->bindParam(':gender', $gender, PDO::PARAM_STR);
+		$query->bindParam(':address', $address, PDO::PARAM_STR);
 		$query->execute();
 		$lastInsertId = $dbh->lastInsertId();
 		if ($lastInsertId) {
@@ -100,6 +108,19 @@ if (isset($_POST['submit'])) {
 							<input type="text" name="mobno" class="form-control" required="true" maxlength="10" pattern="[0-9]+">
 							<h5>Email Address</h5>
 							<input type="email" class="form-control" value="" name="email" required="true">
+							<h5>Address</h5>
+							<input type="text" value="" class="form-control" name="address" required="true">
+							<h5>Gender</h5>
+							<select name="gender" class="form-control" required="true">
+								<option value="M">Male</option>
+								<option value="F">Female</option>
+							</select>
+							<h5>ID Type</h5>
+							<select name="idtype" class="form-control" required="true">
+								<option value="passport">Passport</option>
+								<option value="id_card">Identification Card</option>
+								<option value="driver_license">Driver License</option>
+							</select>
 							<h5>Password</h5>
 							<input type="password" value="" class="form-control" name="password" required="true">
 							<br />
