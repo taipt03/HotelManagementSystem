@@ -11,7 +11,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
     <html>
 
     <head>
-        <title>Sand Dollar Hotel Admin | Read Enquiry</title>
+        <title>Sand Dollar Hotel Admin | Unread Enquiry</title>
 
         <script type="application/x-javascript">
             addEventListener("load", function() {
@@ -57,13 +57,13 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
                             <!-- start content -->
                             <div class="grids">
                                 <div class="progressbar-heading grids-heading">
-                                    <h2>Read Enquiry</h2>
+                                    <h2>Unread Enquiry</h2>
                                 </div>
                                 <div class="panel panel-widget forms-panel">
                                     <div class="forms">
                                         <div class="form-grids widget-shadow" data-example-id="basic-forms">
                                             <div class="form-title">
-                                                <h4>Read Enquiry</h4>
+                                                <h4>Unread Enquiry</h4>
                                             </div>
                                             <div class="form-body">
 
@@ -79,7 +79,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <?php
+                                                    <?php
                                                         if (isset($_GET['pageno'])) {
                                                             $pageno = $_GET['pageno'];
                                                         } else {

@@ -23,12 +23,19 @@ if (isset($_POST['submit'])) {
 	$phone = $_POST['phone'];
 	$email = $_POST['email'];
 	$message = $_POST['message'];
-	$sql = "insert into tblcontact(Name,MobileNumber,Email,Message)values(:name,:phone,:email,:message)";
+
+	$sql0 = "select id from tbluser where fullname =:name and email =:email"; 
+	$query0 = $dbh->prepare($sql0);
+	$query0->bindParam(':name',$name,PDO::PARAM_STR);
+	$query0->bindParam(':email',$email,PDO::PARAM_STR);
+	$query0->execute();
+	$row = $query0->fetchAll(PDO::FETCH_OBJ);
+	$id = $row[0]->id;	
+	$sql = "INSERT INTO tblcontact (userid, message, isread) VALUES (:id, :message, :isread)";
 	$query = $dbh->prepare($sql);
-	$query->bindParam(':name', $name, PDO::PARAM_STR);
-	$query->bindParam(':phone', $phone, PDO::PARAM_STR);
-	$query->bindParam(':email', $email, PDO::PARAM_STR);
+	$query->bindParam(':id', $id, PDO::PARAM_INT);
 	$query->bindParam(':message', $message, PDO::PARAM_STR);
+	$query->bindValue(':isread', 0, PDO::PARAM_INT);
 	$query->execute();
 	$LastInsertId = $dbh->lastInsertId();
 	if ($LastInsertId > 0) {
@@ -92,7 +99,7 @@ if (isset($_POST['submit'])) {
 				<div class="contact-grids">
 					<div class="col-md-6 contact-left">
 						<?php
-						$sql = "SELECT * from tblpage where PageType='aboutus'";
+						$sql = "SELECT * from tblpage where pagetype='aboutus'";
 						$query = $dbh->prepare($sql);
 						$query->execute();
 						$results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -104,7 +111,7 @@ if (isset($_POST['submit'])) {
 																						}
 																					} ?>
 						<?php
-						$sql = "SELECT * from tblpage where PageType='contactus'";
+						$sql = "SELECT * from tblpage where pagetype='contactus'";
 						$query = $dbh->prepare($sql);
 						$query->execute();
 						$results = $query->fetchAll(PDO::FETCH_OBJ);
@@ -115,7 +122,7 @@ if (isset($_POST['submit'])) {
 								<address>
 									<h4><?php echo htmlentities($row->pagetitle); ?></h4>
 									<p><?php echo htmlentities($row->pagedescription); ?></p>
-									<p>Telephone : +<?php echo htmlentities($row->mobilenumber); ?></p>
+									<p>Telephone : <?php echo htmlentities($row->mobilenumber); ?></p>
 									<p>E-mail : <?php echo htmlentities($row->email); ?></p>
 								</address><?php $cnt = $cnt + 1;
 										}

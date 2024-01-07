@@ -46,7 +46,6 @@
                     </li>
 
                     <li><a href="gallery.php">Gallery</a></li>
-                    <li><a href="contact.php">Contact</a></li>
                     <?php if (strlen($_SESSION['hbmsuid']==0)) {?>
                         <!-- <li><a href="admin/login.php">Admin</a></li> -->
                         <li><a href="signup.php">Sign Up</a></li>
@@ -54,6 +53,8 @@
                     <?php } ?>
                     <?php
                     if (strlen($_SESSION['hbmsuid']!=0)) {?>
+                        <li><a href="contact.php">Contact</a></li>
+
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Account <span class="caret"></span></a>
                             <ul class="dropdown-menu">
