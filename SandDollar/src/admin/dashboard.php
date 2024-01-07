@@ -94,7 +94,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 										<h4 class="text-left text-uppercase" style="color: orange"><a href="new-booking.php"><b>New Booking</b></a></h4>
 										<div class="row vertical-center-box vertical-center-box-tablet">
 											<?php
-											$sql2 = "SELECT * from  tblbooking where Status is null ";
+											$sql2 = "SELECT * from  tblbooking where status is null ";
 											$query2 = $dbh->prepare($sql2);
 											$query2->execute();
 											$results2 = $query2->fetchAll(PDO::FETCH_OBJ);
@@ -118,7 +118,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 										<h4 class="text-left text-uppercase" style="color: red"><a href="approved-booking.php"><b>Approved Booking</b></a></h4>
 										<div class="row vertical-center-box vertical-center-box-tablet">
 											<?php
-											$sql2 = "SELECT * from  tblbooking where Status='Approved'";
+											$sql2 = "SELECT * from  tblbooking where status='Approved'";
 											$query2 = $dbh->prepare($sql2);
 											$query2->execute();
 											$results2 = $query2->fetchAll(PDO::FETCH_OBJ);
@@ -142,7 +142,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 										<h4 class="text-left text-uppercase" style="color: magenta"><a href="cancelled-booking.php"><b>Cancelled Booking</b></a></h4>
 										<div class="row vertical-center-box vertical-center-box-tablet">
 											<?php
-											$sql2 = "SELECT * from  tblbooking where Status='Cancelled'";
+											$sql2 = "SELECT * from  tblbooking where status='Cancelled'";
 											$query2 = $dbh->prepare($sql2);
 											$query2->execute();
 											$results2 = $query2->fetchAll(PDO::FETCH_OBJ);
@@ -194,7 +194,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 										<h4 class="text-left text-uppercase" style="color: red"><a href="read-enquiry.php"><b>Read Enquries</b></a></h4>
 										<div class="row vertical-center-box vertical-center-box-tablet">
 											<?php
-											$sql1 = "SELECT * from  tblcontact where Isread='1'";
+											$sql1 = "SELECT * from  tblcontact where isread='1'";
 											$query1 = $dbh->prepare($sql1);
 											$query1->execute();
 											$results1 = $query1->fetchAll(PDO::FETCH_OBJ);
@@ -218,7 +218,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 										<h4 class="text-left text-uppercase" style="color: magenta"><a href="unread-enquiry.php"><b>Unread Enquries</b></a></h4>
 										<div class="row vertical-center-box vertical-center-box-tablet">
 											<?php
-											$sql1 = "SELECT * from  tblcontact where Isread is null";
+											$sql1 = "SELECT * from  tblcontact where isread is null";
 											$query1 = $dbh->prepare($sql1);
 											$query1->execute();
 											$results1 = $query1->fetchAll(PDO::FETCH_OBJ);

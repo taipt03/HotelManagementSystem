@@ -15,6 +15,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 		$remark = $_POST['remark'];
 
 
+
 		$sql = "UPDATE tblbooking SET status=:status,remark=:remark WHERE bookingnumber=:bookingid";
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':status', $status, PDO::PARAM_STR);
@@ -23,7 +24,34 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 
 		$query->execute();
 
-		echo '<script>alert("Remark has been updated")</script>';
+		if ($status = "Approved"){
+			$sql = "SELECT roomid FROM tblbooking WHERE bookingnumber = :bookingid";
+			$query = $dbh->prepare($sql);
+			$query->bindParam(':bookingid', $bookingid, PDO::PARAM_STR);
+			$query->execute();
+			$result = $query->fetch(PDO::FETCH_ASSOC);
+
+			if ($result) {
+				$roomid = $result['roomid'];
+
+				// Check if quantity is greater than 0
+				$sql = "SELECT quantity FROM tblroom WHERE id = :roomid";
+				$query = $dbh->prepare($sql);
+				$query->bindParam(':roomid', $roomid, PDO::PARAM_INT);
+				$query->execute();
+				$row = $query->fetch(PDO::FETCH_ASSOC);
+				$quantity = $row['quantity'];
+
+				if ($quantity > 0) {
+					// Update the quantity for the roomid
+					$sql = "UPDATE tblroom SET quantity = quantity - 1 WHERE id = :roomid";
+					$query = $dbh->prepare($sql);
+					$query->bindParam(':roomid', $roomid, PDO::PARAM_INT);
+					$query->execute();
+					}
+				}
+			}
+		echo '<script>alert("Remark has been updated.")</script>';		
 		echo "<script>window.location.href ='new-booking.php'</script>";
 	}
 	} catch (PDOException $e) {
@@ -129,7 +157,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 											<?php
 												$bookingid = $_GET['bookingid'];
 
-												$sql = "SELECT tblbooking.bookingnumber,tbluser.fullname,tbluser.mobilenumber,tbluser.email,tblbooking.paymentmethod,tbluser.gender,tbluser.address,tblbooking.checkindate,tblbooking.checkoutdate,tblbooking.bookingdate,tblbooking.remark,tblbooking.status,tblbooking.updationdate,tblcategory.categoryname,tblcategory.description,tblroom.price,tblroom.roomname,tblroom.maxadult,tblroom.maxchild,tblroom.roomdesc,tblroom.noofbed,tblroom.image 
+												$sql = "SELECT tblbooking.bookingnumber,tbluser.fullname,tbluser.mobilenumber,tbluser.email,tblbooking.paymentmethod,tbluser.gender,tbluser.address,tblbooking.checkindate,tblbooking.checkoutdate,tblbooking.bookingdate,tblbooking.remark,tblbooking.status,tblbooking.updationdate,tblcategory.categoryname,tblcategory.description,tblroom.price,tblroom.id, tblroom.quantity,tblroom.roomname,tblroom.maxadult,tblroom.maxchild,tblroom.roomdesc,tblroom.noofbed,tblroom.image 
 												FROM tblbooking 
 												JOIN tblroom ON tblbooking.roomid=tblroom.id 
 												JOIN tblcategory ON tblcategory.id=tblroom.roomtype 
@@ -141,6 +169,8 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 
 												$cnt = 1;
 												if ($query->rowCount() > 0) {
+													$roomID = $results[0]->id;
+													$roomquantity = $results[0]->quantity;
 													foreach ($results as $row) {               ?>
 														<table border="1" class="table table-bordered table-striped table-vcenter js-dataTable-full-pagination">
 															<tr>
@@ -250,6 +280,61 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 													}
 												} ?>
 														</table>
+
+														<?php
+
+															if ($status == "") {
+															?>
+																<p align="center" style="padding-top: 20px">
+																	<button class="btn btn-primary waves-effect waves-light w-lg" data-toggle="modal" data-target="#myModal">Take Action</button>
+																</p>
+
+															<?php } ?>
+															<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+																<div class="modal-dialog" role="document">
+																	<div class="modal-content">
+																		<div class="modal-header">
+																			<h5 class="modal-title" id="exampleModalLabel">Take Action</h5>
+																			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																				<span aria-hidden="true">&times;</span>
+																			</button>
+																		</div>
+																		<div class="modal-body">
+																			<table class="table table-bordered table-hover data-tables">
+																				<form method="post" name="submit">
+
+
+
+																					<tr>
+																						<th>Remark :</th>
+																						<td>
+																							<textarea name="remark" placeholder="Remark" rows="12" cols="14" class="form-control wd-450" required="true"></textarea>
+																						</td>
+																					</tr>
+
+
+																					<tr>
+																						<th>Status :</th>
+																						<td>
+
+																							<select name="status" class="form-control wd-450" required="true">
+																								<option value="Approved" selected="true">Approved</option>
+																								<option value="Cancelled">Cancelled</option>
+																							</select>
+																						</td>
+																					</tr>
+																			</table>
+																		</div>
+																		<div class="modal-footer">
+																			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+																			<button type="submit" name="submit" class="btn btn-primary">Update</button>
+
+																			</form>
+
+																		</div>
+																	</div>
+																</div>
+															</div>
 														<p>
 															<a href="javascript:history.go(-1)" title="Return to the previous page">&laquo; Go back</a>
 														</p>

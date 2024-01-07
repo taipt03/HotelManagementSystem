@@ -8,9 +8,9 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 } else {
 	if (isset($_POST['submit'])) {
 		$adminid = $_SESSION['hbmsaid'];
-		$cpassword = md5($_POST['currentpassword']);
-		$newpassword = md5($_POST['newpassword']);
-		$sql = "SELECT ID FROM tbladmin WHERE ID=:adminid and Password=:cpassword";
+		$cpassword = $_POST['currentpassword'];
+		$newpassword = $_POST['newpassword'];
+		$sql = "SELECT id FROM tbladmin WHERE id=:adminid and password=:cpassword";
 		$query = $dbh->prepare($sql);
 		$query->bindParam(':adminid', $adminid, PDO::PARAM_STR);
 		$query->bindParam(':cpassword', $cpassword, PDO::PARAM_STR);
@@ -18,7 +18,7 @@ if (strlen($_SESSION['hbmsaid'] == 0)) {
 		$results = $query->fetchAll(PDO::FETCH_OBJ);
 
 		if ($query->rowCount() > 0) {
-			$con = "update tbladmin set Password=:newpassword where ID=:adminid";
+			$con = "UPDATE tbladmin SET password=:newpassword where id=:adminid";
 			$chngpwd1 = $dbh->prepare($con);
 			$chngpwd1->bindParam(':adminid', $adminid, PDO::PARAM_STR);
 			$chngpwd1->bindParam(':newpassword', $newpassword, PDO::PARAM_STR);
